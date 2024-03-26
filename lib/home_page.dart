@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -12,23 +12,31 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Row(
           children: [
             IconButton(
-              icon: Icon(Icons.account_circle),
+              icon: Icon(Icons.account_circle, color: Colors.white),
               onPressed: () {}, // Implement user icon button action
             ),
-            Text('ClassyCode'),
+            Text(
+              'ClassyCode',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+              ),
+            ),
           ],
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.account_circle),
+            icon: Icon(Icons.account_circle, color: Colors.white),
             onPressed: () {}, // Implement user icon button action
           ),
           IconButton(
-            icon: Icon(Icons.menu),
+            icon: Icon(Icons.menu, color: Colors.white),
             onPressed: () {}, // Implement menu icon button action
           ),
         ],
@@ -47,9 +55,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     SizedBox(width: 10),
                     DropdownButton<String>(
                       value: selectedLanguage,
+                      dropdownColor: const Color.fromARGB(
+                          255, 28, 28, 28), // Set background color to black
                       items: languages
-                          .map((lang) =>
-                              DropdownMenuItem(value: lang, child: Text(lang)))
+                          .map((lang) => DropdownMenuItem(
+                                value: lang,
+                                child: Text(
+                                  lang,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily:
+                                        GoogleFonts.jetBrainsMono().fontFamily,
+                                  ), // Set text color to white
+                                ),
+                              ))
                           .toList(),
                       onChanged: (value) =>
                           setState(() => selectedLanguage = value!),
@@ -72,12 +91,57 @@ class _MyHomePageState extends State<MyHomePage> {
 class UploadImageSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: ElevatedButton.icon(
-        onPressed: () {}, // Implement photo upload functionality
-        icon: Icon(Icons.upload),
-        label: Text('Upload Class Diagram'),
+    return SizedBox(
+      height: 700, // Adjust the height as needed
+      width: 900,
+      child: Container(
+        padding: EdgeInsets.only(top: 100.0),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Background Box
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: Color(0xFF202124),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+            // Round button
+            Material(
+              color: Color(0xFF31363F),
+              borderRadius: BorderRadius.circular(50),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(50),
+                onTap: () {
+                  // Handle button tap
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Icon(
+                    Icons.add,
+                    size: 60,
+                    color: Color(0xFFB8DBD9),
+                  ),
+                ),
+              ),
+            ),
+            // Text
+            Positioned(
+              top: 380.0,
+              child: Text(
+                'Upload Class Diagram',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFB8DBD9),
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -91,10 +155,22 @@ class GenerateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(30.0),
       child: ElevatedButton(
-        onPressed: onPressed,
-        child: Text('Generate'),
+        onPressed: () {},
+        child: Text(
+          'GENERATE',
+          style: TextStyle(
+            color: Color(0xFF31363F), // Set text color to #B8DBD9
+            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ), // Set font to JetBrains Mono
+        ),
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size(150, 50),
+          backgroundColor: Color(0xFFB8DBD9),
+        ),
       ),
     );
   }
@@ -110,15 +186,22 @@ class GeneratedCodeSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Generated Code'),
+              Text(
+                'Generated Code',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                  fontSize: 20,
+                ),
+              ),
               Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.copy),
+                    icon: Icon(Icons.copy, color: Colors.white),
                     onPressed: () {}, // Implement code copy functionality
                   ),
                   IconButton(
-                    icon: Icon(Icons.save),
+                    icon: Icon(Icons.save, color: Colors.white),
                     onPressed: () {}, // Implement code save functionality
                   ),
                 ],
@@ -127,7 +210,10 @@ class GeneratedCodeSection extends StatelessWidget {
           ),
           Text(
             'This section will display the generated code',
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+            ),
           ),
         ],
       ),
