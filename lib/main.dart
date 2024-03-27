@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:classy_code/views/login_page.dart';
 import 'package:classy_code/views/registration.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +19,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const RegistrationPage(), // Use RegistrationPage as the home
+      home: const RegistrationPage(),
+      routes: {
+        '/login': (context) => LoginPage(),
+      }, 
     );
   }
 }
