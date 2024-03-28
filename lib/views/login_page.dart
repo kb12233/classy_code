@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -34,25 +36,29 @@ class _LoginPageState extends State<LoginPage> {
                     // Logo and app name in upper left
                     Row(
                       children: [
-                        Image.asset('images/logo_light.png'),
-                        SizedBox(width: 10), // Adjust spacing
+                        Image.asset(
+                          'lib/images/logo_dark.png',
+                          width: 50,
+                          height: 50,
+                        ),
+                        SizedBox(width: 20), // Adjust spacing
                         // App name
                         Text(
                           "ClassyCode",
                           style: GoogleFonts.jetBrainsMono(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 50), // Adjust spacing
+                    SizedBox(height: 70), // Adjust spacing
                     // Centered label for signing in
                     Text(
                       "Sign in to ClassyCode",
                       style: GoogleFonts.jetBrainsMono(
-                        fontSize: 30,
+                        fontSize: 50,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -60,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 60),
                     // Email input field
                     Container(
-                      width: 450, // Adjust width as needed
+                      width: 500, // Adjust width as needed
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         color: Color(0xFF2F4550),
@@ -87,10 +93,10 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30),
                     // Password input field
                     Container(
-                      width: 450, // Adjust width as needed
+                      width: 500, // Adjust width as needed
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         color: Color(0xFF2F4550),
@@ -139,13 +145,14 @@ class _LoginPageState extends State<LoginPage> {
                         print('Signed In');
                       },
                       child: Text(
-                        "Sign In",
+                        "SIGN IN",
                         style: GoogleFonts.jetBrainsMono(
                           color: Color(0xFFB8DBD9),
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: btnColor,
+                        fixedSize: Size(200, 50),
                       ),
                     ),
                   ],
@@ -157,6 +164,35 @@ class _LoginPageState extends State<LoginPage> {
             flex: 2,
             child: Container(
               color: otherColor,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 250.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Hello, Friend!',
+                      style: TextStyle(
+                        color: Color(0xFF31363F),
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                      ),
+                    ),
+                    SizedBox(height: 50),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: Text(
+                        'Create an account and get started!',
+                        style: TextStyle(
+                          color: Color(0xFF31363F),
+                          fontSize: 20,
+                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               // Placeholder for content in the second container
             ),
           ),
