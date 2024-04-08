@@ -14,9 +14,152 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  final bgColor = const Color(0xFF333333);
+  final bgColor = const Color(0xFF202124);
   final btnColor = const Color(0xFF2F4550);
   final otherColor = const Color(0xFFB8DBD9);
+  final otherColor1 = const Color(0xFF31363F);
+
+  void resetPasswordDialog(BuildContext context) {
+    TextEditingController newPass = TextEditingController();
+    TextEditingController confirmPass = TextEditingController();
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: bgColor.withOpacity(0.5),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: otherColor,
+                  width: 2,
+                )),
+            contentPadding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+            // title: Text('Reset Password',
+            //     style: TextStyle(
+            //       color: otherColor,
+            //     )),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.lock_outline,
+                  color: otherColor,
+                  size: 70,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Reset Password',
+                  style: TextStyle(
+                    color: otherColor,
+                    fontSize: 30,
+                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                  ),
+                ),
+                SizedBox(height: 30),
+                Container(
+                  height: 50,
+                  width: 350,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Color(0xFF2F4550).withOpacity(0.5),
+                  ),
+                  child: Row(
+                    children: [
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 8.0),
+                      //   child: Icon(Icons.person, color: Color(0xFFB8DBD9)),
+                      // ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            labelText: 'New Password',
+                            labelStyle: TextStyle(
+                              color: Color(0xFFB8DBD9),
+                              fontFamily:
+                                  GoogleFonts.jetBrainsMono().fontFamily,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 50,
+                  width: 350,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Color(0xFF2F4550).withOpacity(0.5),
+                  ),
+                  child: Row(
+                    children: [
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 8.0),
+                      //   child: Icon(Icons.person, color: Color(0xFFB8DBD9)),
+                      // ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            labelText: 'Confirm Password',
+                            labelStyle: TextStyle(
+                              color: Color(0xFFB8DBD9),
+                              fontFamily:
+                                  GoogleFonts.jetBrainsMono().fontFamily,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: btnColor,
+                ),
+                onPressed: () {
+                  //here ang pag reset
+                  print('The button is clicked!');
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Reset Password',
+                  style: TextStyle(
+                    color: otherColor,
+                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  //here ang pag cancel
+                  print('The button is clicked!');
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: btnColor,
+                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +217,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Icon(Icons.person, color: Color(0xFFB8DBD9)),
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Icon(Icons.email_outlined,
+                                color: Color(0xFFB8DBD9)),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
@@ -104,8 +248,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Icon(Icons.lock, color: Color(0xFFB8DBD9)),
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Icon(Icons.lock_outline,
+                                color: Color(0xFFB8DBD9)),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
@@ -129,6 +274,7 @@ class _LoginPageState extends State<LoginPage> {
                     GestureDetector(
                       onTap: () {
                         // Add your action for forgot password
+                        resetPasswordDialog(context);
                       },
                       child: Text(
                         "Forgot your password?",
@@ -178,18 +324,40 @@ class _LoginPageState extends State<LoginPage> {
                         fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                       ),
                     ),
-                    SizedBox(height: 50),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
-                      child: Text(
-                        'Create an account and get started!',
-                        style: TextStyle(
-                          color: Color(0xFF31363F),
-                          fontSize: 20,
-                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                    SizedBox(height: 30),
+                    Center(
+                      child: Padding(
+                        padding:
+                          EdgeInsets.only(top: 5, left: 90, right: 50),
+                        child: Text(
+                          'Create an account and get started!',
+                          style: TextStyle(
+                            color: Color(0xFF31363F),
+                            fontSize: 20,
+                            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                          ),
                         ),
                       ),
                     ),
+                    SizedBox(height: 30),
+                    OutlinedButton(
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/register'),
+                      child: Text(
+                        'SIGN UP',
+                        style: TextStyle(
+                          color: Color(0xFF31363F),
+                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(150, 50),
+                        side: BorderSide(color: otherColor1), // Border color
+                        textStyle: TextStyle(
+                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
