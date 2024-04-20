@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
+import 'package:classy_code/controllers/registration_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,6 +12,10 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +150,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   const SizedBox(width: 10),
                                   Expanded(
                                     child: TextFormField(
+                                      controller: nameController,
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'Name',
@@ -184,6 +190,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   const SizedBox(width: 10),
                                   Expanded(
                                     child: TextFormField(
+                                      controller: emailController,
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'Email',
@@ -223,6 +230,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   const SizedBox(width: 10),
                                   Expanded(
                                     child: TextFormField(
+                                      controller: passwordController,
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'Password',
@@ -247,7 +255,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _registerUser();
+                            },
                             child: Text(
                               'SIGN UP',
                               style: TextStyle(
@@ -274,4 +284,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
   }
+
+ void _registerUser() async {
+    String name = nameController.text;
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    try {
+      await RegistrationController.registerUser(
+        name: name,
+        email: email,
+        password: password,
+      );
+
+      // Navigate to the login page after successful registration
+      Navigator.pushNamed(context, '/login');
+    } catch (e) {
+      // Handle registration errors here
+      // You can show an error message to the user if registration fails
+      // For example:
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text("Registration failed. Please try again."),
+      // ));
+    }
+  }
 }
+
