@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "861954482863",
+    "project_id": "classycode-d6e56",
+    "storage_bucket": "classycode-d6e56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:861954482863:android:57fe37cec3d4b9fbe7aa5a",
+        "android_client_info": {
+          "package_name": "com.example.classy_code"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlz-et3Th8gQ4_JRVGGx-lJLwI-k5RVNU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

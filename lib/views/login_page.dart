@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:classy_code/controllers/login_controller.dart';
+import 'package:classy_code/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,6 +16,50 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  Future<void> signInUser() async {
+    // show loading circle
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    //sign in
+    String? result = await LoginControl.signIn(
+        emailController.text.trim(), passwordController.text.trim());
+    if (!mounted) return;
+    Navigator.pop(context);
+    if (result == 'Success') {
+      Navigator.pushNamed(context, '/main');
+      final user_auth = FirebaseAuth.instance.currentUser!;
+      UserModel? user = await UserModel.getUserData(user_auth.uid);
+    }
+    if (result != 'Success') {
+      // Handle the error. For example, show a dialog with the error message.
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text(result!),
+        ),
+      );
+    }
+  }
+
+  Future<void> resetPassword() async {
+    
+  }
+
+  void displaySignInError(String errorCode) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(title: Text(errorCode));
+        });
+  }
 
   final bgColor = const Color(0xFF202124);
   final btnColor = const Color(0xFF2F4550);
@@ -288,6 +335,7 @@ class _LoginPageState extends State<LoginPage> {
                     ElevatedButton(
                       onPressed: () {
                         // Add your action for signing in
+                        signInUser();
                         print('Signed In');
                       },
                       child: Text(
@@ -327,8 +375,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 30),
                     Center(
                       child: Padding(
-                        padding:
-                          EdgeInsets.only(top: 5, left: 90, right: 50),
+                        padding: EdgeInsets.only(top: 5, left: 90, right: 50),
                         child: Text(
                           'Create an account and get started!',
                           style: TextStyle(
