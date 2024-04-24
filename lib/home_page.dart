@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -88,35 +90,65 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class UploadImageSection extends StatelessWidget {
+class UploadImageSection extends StatefulWidget {
+  @override
+  _UploadImageSectionState createState() => _UploadImageSectionState();
+}
+
+class _UploadImageSectionState extends State<UploadImageSection> {
+  File? _selectedFile;
+
+  void _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      setState(() {
+        _selectedFile = File(result.files.single.path!);
+      });
+    } else {
+      // User canceled the file picking
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 700, // Adjust the height as needed
       width: 900,
-      child: Container(
-        padding: EdgeInsets.only(top: 100.0),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Background Box
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                color: Color(0xFF202124),
+      child: Stack(
+        alignment: Alignment.center, // Center the contents of the stack
+        children: [
+          // Background Box
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              color: Color(0xFF202124),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+          // Display selected image if any
+          if (_selectedFile != null)
+            Positioned.fill(
+              child: ClipRRect(
+                // ClipRRect to match the border radius of the container
                 borderRadius: BorderRadius.circular(8.0),
+                child: Image.file(
+                  _selectedFile!,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            // Round button
-            Material(
+          // Round button
+          Positioned(
+            bottom: _selectedFile != null ? 20.0 : null,
+            right: _selectedFile != null ? 20.0 : null,
+            child: Material(
               color: Color(0xFF31363F),
               borderRadius: BorderRadius.circular(50),
               child: InkWell(
                 borderRadius: BorderRadius.circular(50),
-                onTap: () {
-                  // Handle button tap
-                },
+                onTap: _pickFile,
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Icon(
@@ -127,9 +159,12 @@ class UploadImageSection extends StatelessWidget {
                 ),
               ),
             ),
-            // Text
+          ),
+          // Text
+
+          if (_selectedFile == null)
             Positioned(
-              top: 380.0,
+              top: 420.0,
               child: Text(
                 'Upload Class Diagram',
                 style: TextStyle(
@@ -140,8 +175,7 @@ class UploadImageSection extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
