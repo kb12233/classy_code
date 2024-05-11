@@ -5,6 +5,6 @@ class InputManager {
   final Uploader uploader = Uploader();
 
   Future<File?> pickFile() async {
-    return uploader.pickFile();
+    return uploader.upload();
   }
 }

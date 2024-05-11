@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 
 class Uploader {
-  Future<File?> pickFile() async {
+  Future<File?> upload() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
@@ -11,6 +11,4 @@ class Uploader {
       return null;
     }
   }
-
- 
 }
