@@ -1,7 +1,9 @@
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+import 'package:classy_code/subsystems/input_management/input_manager.dart';
+import 'package:classy_code/subsystems/input_management/uploader.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -10,6 +12,24 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String selectedLanguage = 'Select Language';
+  final InputManager inputManager = InputManager();
+  final Uploader uploader = Uploader();
+  File? _selectedFile;
+
+  void _pickFile() async {
+    File? file = await inputManager.pickFile();
+
+    if (file != null) {
+      setState(() {
+        _selectedFile = file;
+      });
+
+      // Upload the selected file
+      await uploader.upload(_selectedFile!);
+    } else {
+      // User canceled the file picking
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +68,66 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: Column(
               children: [
-                UploadImageSection(),
+                SizedBox(
+                  height: 700,
+                  width: 900,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF202124),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      if (_selectedFile != null)
+                        Positioned.fill(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.file(
+                              _selectedFile!,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      Positioned(
+                        bottom: _selectedFile != null ? 20.0 : null,
+                        right: _selectedFile != null ? 20.0 : null,
+                        child: Material(
+                          color: Color(0xFF31363F),
+                          borderRadius: BorderRadius.circular(50),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(50),
+                            onTap: _pickFile,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Icon(
+                                Icons.add,
+                                size: 60,
+                                color: Color(0xFFB8DBD9),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (_selectedFile == null)
+                        Positioned(
+                          top: 420.0,
+                          child: Text(
+                            'Upload Class Diagram',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFB8DBD9),
+                              fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -58,19 +137,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     DropdownButton<String>(
                       value: selectedLanguage,
                       dropdownColor: const Color.fromARGB(
-                          255, 28, 28, 28), // Set background color to black
+                          255, 28, 28, 28),
                       items: languages
                           .map((lang) => DropdownMenuItem(
-                                value: lang,
-                                child: Text(
-                                  lang,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily:
-                                        GoogleFonts.jetBrainsMono().fontFamily,
-                                  ), // Set text color to white
-                                ),
-                              ))
+                        value: lang,
+                        child: Text(
+                          lang,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily:
+                            GoogleFonts.jetBrainsMono().fontFamily,
+                          ),
+                        ),
+                      ))
                           .toList(),
                       onChanged: (value) =>
                           setState(() => selectedLanguage = value!),
@@ -90,97 +169,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class UploadImageSection extends StatefulWidget {
-  @override
-  _UploadImageSectionState createState() => _UploadImageSectionState();
-}
-
-class _UploadImageSectionState extends State<UploadImageSection> {
-  File? _selectedFile;
-
-  void _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      setState(() {
-        _selectedFile = File(result.files.single.path!);
-      });
-    } else {
-      // User canceled the file picking
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 700, // Adjust the height as needed
-      width: 900,
-      child: Stack(
-        alignment: Alignment.center, // Center the contents of the stack
-        children: [
-          // Background Box
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              color: Color(0xFF202124),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-          // Display selected image if any
-          if (_selectedFile != null)
-            Positioned.fill(
-              child: ClipRRect(
-                // ClipRRect to match the border radius of the container
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.file(
-                  _selectedFile!,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          // Round button
-          Positioned(
-            bottom: _selectedFile != null ? 20.0 : null,
-            right: _selectedFile != null ? 20.0 : null,
-            child: Material(
-              color: Color(0xFF31363F),
-              borderRadius: BorderRadius.circular(50),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(50),
-                onTap: _pickFile,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Icon(
-                    Icons.add,
-                    size: 60,
-                    color: Color(0xFFB8DBD9),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // Text
-
-          if (_selectedFile == null)
-            Positioned(
-              top: 420.0,
-              child: Text(
-                'Upload Class Diagram',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFB8DBD9),
-                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
 class GenerateButton extends StatelessWidget {
   final VoidCallback onPressed;
 
@@ -191,15 +179,15 @@ class GenerateButton extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(30.0),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         child: Text(
           'GENERATE',
           style: TextStyle(
-            color: Color(0xFF31363F), // Set text color to #B8DBD9
+            color: Color(0xFF31363F),
             fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
             fontSize: 20,
             fontWeight: FontWeight.bold,
-          ), // Set font to JetBrains Mono
+          ),
         ),
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(150, 50),

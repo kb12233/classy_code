@@ -1,4 +1,4 @@
-import 'package:classy_code/home_page.dart';
+import 'package:classy_code/views/home_page.dart';
 import 'package:classy_code/views/login_page.dart';
 import 'package:classy_code/views/registration.dart';
 import 'package:flutter/material.dart';
