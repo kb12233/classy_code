@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:classy_code/img_code_converter.dart';
 import 'package:classy_code/input_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:markdown_viewer/markdown_viewer.dart';
+import 'package:flutter_prism/flutter_prism.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -210,7 +213,7 @@ class _HomePageState extends State<HomePage> {
           ),
           VerticalDivider(thickness: 1),
           Expanded(
-            child: GeneratedCodeSection(),
+            child: GeneratedCodeSection(generatedCode: generatedCode,),
           ),
         ],
       ),
@@ -247,7 +250,16 @@ class GenerateButton extends StatelessWidget {
   }
 }
 
-class GeneratedCodeSection extends StatelessWidget {
+class GeneratedCodeSection extends StatefulWidget {
+  final String generatedCode;
+
+  const GeneratedCodeSection({Key? key, required this.generatedCode}) : super(key: key);
+
+  @override
+  _GeneratedCodeSectionState createState() => _GeneratedCodeSectionState();
+}
+
+class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -279,13 +291,51 @@ class GeneratedCodeSection extends StatelessWidget {
               ),
             ],
           ),
-          Text(
-            'This section will display the generated code',
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-            ),
-          ),
+          widget.generatedCode != ""
+              ? Expanded(
+                child: SingleChildScrollView(
+                  child: MarkdownViewer(
+                    widget.generatedCode,
+                    enableTaskList: true,
+                    enableSuperscript: false,
+                    enableSubscript: false,
+                    enableFootnote: false,
+                    enableImageSize: false,
+                    enableKbd: false,
+                    highlightBuilder: (text, language, infoString) {
+                      final prism = Prism(
+                        mouseCursor: SystemMouseCursors.text,
+                        style: PrismStyle.dark(),
+                      );
+                      return prism.render(text, language ?? 'plain');
+                    },
+                    styleSheet: MarkdownStyle(
+                      listItemMarkerTrailingSpace: 12,
+                      codeSpan: TextStyle(
+                        fontFamily: 'RobotoMono',
+                      ),
+                      codeBlock: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        letterSpacing: -0.3,
+                        fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                      ),
+                      codeblockDecoration: BoxDecoration(
+                        color: Color(0xFF202124),
+                        borderRadius: BorderRadius.circular(8.0),
+                        
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              : Text(
+                  'This section will display the generated code',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                  ),
+                ),
         ],
       ),
     );
