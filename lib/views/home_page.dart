@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:classy_code/subsystems/input_management/input_manager.dart';
+import 'package:classy_code/input_manager.dart';
 import 'package:classy_code/subsystems/input_management/uploader.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
       });
 
       // Upload the selected file
-      await uploader.upload(_selectedFile!);
+      //await uploader.upload(_selectedFile!);
     } else {
       // User canceled the file picking
     }
