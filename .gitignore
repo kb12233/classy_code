@@ -55,3 +55,4 @@ windows/flutter/generated_plugin_registrant.h
 windows/flutter/generated_plugins.cmake
 *.lock
 lib/tempCodeRunnerFile.dart
+.env

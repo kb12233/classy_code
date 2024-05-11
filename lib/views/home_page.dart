@@ -1,8 +1,8 @@
 import 'dart:io';
+import 'package:classy_code/img_code_converter.dart';
 import 'package:classy_code/input_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,19 +12,71 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String selectedLanguage = 'Select Language';
   final InputManager inputManager = InputManager();
+  final ImageToCodeConverter converter = ImageToCodeConverter();
   File? _selectedFile;
+  String generatedCode = "";
 
   void _pickFile() async {
     File? file = await inputManager.uploadInput();
+    bool isValid = await inputManager.verifyInput(file);
 
     if (file != null) {
-      setState(() {
-        _selectedFile = file;
-      });
+      if (isValid == false) {
+        // show an alert dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Invalid File'),
+              content: Text('The selected file is not a class diagram.'),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        setState(() {
+          _selectedFile = file;
+        });
+      }
 
       // Upload the selected file
     } else {
       // User canceled the file picking
+    }
+  }
+
+  void generate() async {
+    if (selectedLanguage != "Select Language") {
+      String? code = await converter.convert(_selectedFile!, selectedLanguage);
+      print(code ?? '');
+      setState(() {
+        generatedCode = code!;
+      });
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Invalid Language'),
+            content: Text('Please select a language first.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -118,7 +170,8 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFFB8DBD9),
-                              fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                              fontFamily:
+                                  GoogleFonts.jetBrainsMono().fontFamily,
                             ),
                           ),
                         ),
@@ -128,25 +181,24 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   children: [
                     Expanded(
-                      child: GenerateButton(onPressed: () {}),
+                      child: GenerateButton(onPressed: generate),
                     ),
                     SizedBox(width: 10),
                     DropdownButton<String>(
                       value: selectedLanguage,
-                      dropdownColor: const Color.fromARGB(
-                          255, 28, 28, 28),
+                      dropdownColor: const Color.fromARGB(255, 28, 28, 28),
                       items: languages
                           .map((lang) => DropdownMenuItem(
-                        value: lang,
-                        child: Text(
-                          lang,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily:
-                            GoogleFonts.jetBrainsMono().fontFamily,
-                          ),
-                        ),
-                      ))
+                                value: lang,
+                                child: Text(
+                                  lang,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily:
+                                        GoogleFonts.jetBrainsMono().fontFamily,
+                                  ),
+                                ),
+                              ))
                           .toList(),
                       onChanged: (value) =>
                           setState(() => selectedLanguage = value!),
