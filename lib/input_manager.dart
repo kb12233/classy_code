@@ -1,14 +1,10 @@
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+import 'package:classy_code/subsystems/input_management/uploader.dart';
 
 class InputManager {
-  Future<File?> pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+  final Uploader uploader = Uploader();
 
-    if (result != null) {
-      return File(result.files.single.path!);
-    } else {
-      return null;
-    }
+  Future<File?> pickFile() async {
+    return uploader.pickFile();
   }
 }

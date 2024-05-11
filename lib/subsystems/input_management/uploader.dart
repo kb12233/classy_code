@@ -1,9 +1,16 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 
 class Uploader {
-  Future<void> upload(File file) async {
-    // Your upload logic here
-    // For example, you could upload the file to a server
-    // or save it locally
+  Future<File?> pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      return File(result.files.single.path!);
+    } else {
+      return null;
+    }
   }
+
+ 
 }

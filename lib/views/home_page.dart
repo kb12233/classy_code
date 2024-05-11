@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:classy_code/input_manager.dart';
-import 'package:classy_code/subsystems/input_management/uploader.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,7 +12,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String selectedLanguage = 'Select Language';
   final InputManager inputManager = InputManager();
-  final Uploader uploader = Uploader();
   File? _selectedFile;
 
   void _pickFile() async {
@@ -25,7 +23,6 @@ class _MyHomePageState extends State<MyHomePage> {
       });
 
       // Upload the selected file
-      //await uploader.upload(_selectedFile!);
     } else {
       // User canceled the file picking
     }
