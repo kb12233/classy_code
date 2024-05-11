@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   File? _selectedFile;
 
   void _pickFile() async {
-    File? file = await inputManager.pickFile();
+    File? file = await inputManager.uploadInput();
 
     if (file != null) {
       setState(() {
