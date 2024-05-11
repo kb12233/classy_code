@@ -1,4 +1,4 @@
-import 'package:classy_code/home_page.dart';
+import 'package:classy_code/views/home_page.dart';
 import 'package:classy_code/views/login_page.dart';
 import 'package:classy_code/views/registration.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegistrationPage(),
-        '/main': (context) => MyHomePage(),
+        '/main': (context) => HomePage(),
       },
     );
   }
