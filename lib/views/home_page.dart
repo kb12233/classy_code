@@ -1,10 +1,11 @@
 import 'dart:io';
+
 import 'package:classy_code/img_code_converter.dart';
 import 'package:classy_code/input_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_prism/flutter_prism.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
-import 'package:flutter_prism/flutter_prism.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -98,130 +99,169 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Row(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70.0), // Adjust the height as needed
+        child: Column(
           children: [
-            IconButton(
-              icon: Icon(Icons.account_circle, color: Colors.white),
-              onPressed: () {}, // Implement user icon button action
-            ),
-            Text(
-              'ClassyCode',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+            AppBar(
+              backgroundColor: Colors.black,
+              leading: Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back,
+                      size: 30), // Resize the back button
+                  color: Colors.white, // Change the color of the back button
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(); // Define the back button action
+                  },
+                ),
               ),
+              title: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Image.asset(
+                      'lib/images/logo_dark.png',
+                      width: 50,
+                      height: 50,
+                    ),
+                  ),
+                  SizedBox(
+                      width: 10), // Optional: add space between logo and text
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Text(
+                      'ClassyCode',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.account_circle, color: Colors.white),
+                  iconSize: 40,
+                  onPressed: () {}, // Implement user icon button action
+                ),
+                IconButton(
+                  icon: Icon(Icons.menu, color: Colors.white),
+                  iconSize: 30,
+                  onPressed: () {}, // Implement menu icon button action
+                ),
+              ],
+            ),
+            Container(
+              height: 10.0, // Adjust the height of the bottom margin as needed
+              color: Colors.black, // Same color as the AppBar to blend in
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle, color: Colors.white),
-            onPressed: () {}, // Implement user icon button action
-          ),
-          IconButton(
-            icon: Icon(Icons.menu, color: Colors.white),
-            onPressed: () {}, // Implement menu icon button action
-          ),
-        ],
       ),
       body: Stack(
         children: [
           Row(
             children: [
               Expanded(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 700,
-                      width: 900,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF202124),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          if (_selectedFile != null)
-                            Positioned.fill(
-                              child: ClipRRect(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 700,
+                        width: 900,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color(0xFF202124),
                                 borderRadius: BorderRadius.circular(8.0),
-                                child: Image.file(
-                                  _selectedFile!,
-                                  fit: BoxFit.cover,
-                                ),
                               ),
                             ),
-                          Positioned(
-                            bottom: _selectedFile != null ? 20.0 : null,
-                            right: _selectedFile != null ? 20.0 : null,
-                            child: Material(
-                              color: Color(0xFF31363F),
-                              borderRadius: BorderRadius.circular(50),
-                              child: InkWell(
+                            if (_selectedFile != null)
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.file(
+                                    _selectedFile!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            Positioned(
+                              bottom: _selectedFile != null ? 20.0 : null,
+                              right: _selectedFile != null ? 20.0 : null,
+                              child: Material(
+                                color: Color(0xFF31363F),
                                 borderRadius: BorderRadius.circular(50),
-                                onTap: _pickFile,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Icon(
-                                    Icons.add,
-                                    size: 60,
-                                    color: Color(0xFFB8DBD9),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(50),
+                                  onTap: _pickFile,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 60,
+                                      color: Color(0xFFB8DBD9),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          if (_selectedFile == null && !_isUploading)
-                            Positioned(
-                              top: 420.0,
-                              child: Text(
-                                'Upload Class Diagram',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFB8DBD9),
-                                  fontFamily:
-                                      GoogleFonts.jetBrainsMono().fontFamily,
+                            if (_selectedFile == null && !_isUploading)
+                              Positioned(
+                                top: 420.0,
+                                child: Text(
+                                  'Upload Class Diagram',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFFB8DBD9),
+                                    fontFamily:
+                                        GoogleFonts.jetBrainsMono().fontFamily,
+                                  ),
                                 ),
                               ),
-                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GenerateButton(onPressed: generate),
+                          ),
+                          SizedBox(width: 10),
+                          DropdownButton<String>(
+                            value: selectedLanguage,
+                            dropdownColor:
+                                const Color.fromARGB(255, 28, 28, 28),
+                            items: languages
+                                .map((lang) => DropdownMenuItem(
+                                      value: lang,
+                                      child: Text(
+                                        lang,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily:
+                                              GoogleFonts.jetBrainsMono()
+                                                  .fontFamily,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                            onChanged: (value) =>
+                                setState(() => selectedLanguage = value!),
+                          ),
                         ],
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GenerateButton(onPressed: generate),
-                        ),
-                        SizedBox(width: 10),
-                        DropdownButton<String>(
-                          value: selectedLanguage,
-                          dropdownColor: const Color.fromARGB(255, 28, 28, 28),
-                          items: languages
-                              .map((lang) => DropdownMenuItem(
-                                    value: lang,
-                                    child: Text(
-                                      lang,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: GoogleFonts.jetBrainsMono()
-                                            .fontFamily,
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
-                          onChanged: (value) =>
-                              setState(() => selectedLanguage = value!),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               VerticalDivider(thickness: 1),
@@ -322,6 +362,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
     return Container(
       padding: EdgeInsets.all(16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -348,6 +389,9 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
               ),
             ],
           ),
+          SizedBox(
+              height:
+                  8.0), // Add some spacing between the header and the content
           widget.generatedCode.isNotEmpty
               ? Expanded(
                   child: SingleChildScrollView(
