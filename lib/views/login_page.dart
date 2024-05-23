@@ -49,9 +49,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> resetPassword() async {
-    
-  }
+  Future<void> resetPassword() async {}
 
   void displaySignInError(String errorCode) {
     showDialog(
@@ -113,10 +111,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: Row(
                     children: [
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 8.0),
-                      //   child: Icon(Icons.person, color: Color(0xFFB8DBD9)),
-                      // ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -147,10 +141,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: Row(
                     children: [
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 8.0),
-                      //   child: Icon(Icons.person, color: Color(0xFFB8DBD9)),
-                      // ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -220,8 +210,6 @@ class _LoginPageState extends State<LoginPage> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Logo and app name in upper left
                     Row(
@@ -243,7 +231,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 70), // Adjust spacing
+                    SizedBox(height: 150), // Adjust spacing
                     // Centered label for signing in
                     Text(
                       "Sign in to ClassyCode",
@@ -272,6 +260,9 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: TextFormField(
                               controller: emailController,
+                              style: GoogleFonts.jetBrainsMono(
+                                color: Colors.white,
+                              ),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 labelText: 'Email',
@@ -303,6 +294,9 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: TextFormField(
                               controller: passwordController,
+                              style: GoogleFonts.jetBrainsMono(
+                                color: Colors.white,
+                              ),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 labelText: 'Password',
@@ -359,7 +353,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Container(
               color: otherColor,
               child: Padding(
-                padding: const EdgeInsets.only(top: 250.0),
+                padding: const EdgeInsets.only(top: 300.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [

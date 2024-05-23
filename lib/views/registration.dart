@@ -53,17 +53,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 150.0),
-                        child: Text(
-                          'Welcome Back!',
-                          style: TextStyle(
-                            color: Color(0xFF31363F),
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                          ), // Set font to JetBrains Mono
-                        ),
+                      SizedBox(height: 250.0),
+                      Text(
+                        'Welcome Back!',
+                        style: TextStyle(
+                          color: Color(0xFF31363F),
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                        ), // Set font to JetBrains Mono
                       ),
                       SizedBox(height: 50.0),
                       Padding(
@@ -122,7 +120,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       Text(
                         'Create Account',
                         style: TextStyle(
-                          color: Color(0xFFB8DBD9),
+                          color: Colors.white,
                           fontSize: 50,
                           fontWeight: FontWeight.bold,
                           fontFamily: GoogleFonts.jetBrainsMono()
@@ -151,6 +149,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   Expanded(
                                     child: TextFormField(
                                       controller: nameController,
+                                      style: GoogleFonts.jetBrainsMono(
+                                        color: Colors.white,
+                                      ),
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'Name',
@@ -191,6 +192,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   Expanded(
                                     child: TextFormField(
                                       controller: emailController,
+                                      style: GoogleFonts.jetBrainsMono(
+                                        color: Colors.white,
+                                      ),
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'Email',
@@ -231,6 +235,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   Expanded(
                                     child: TextFormField(
                                       controller: passwordController,
+                                      style: GoogleFonts.jetBrainsMono(
+                                        color: Colors.white,
+                                      ),
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'Password',
@@ -285,7 +292,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
- void _registerUser() async {
+  void _registerUser() async {
     String name = nameController.text;
     String email = emailController.text;
     String password = passwordController.text;
@@ -309,4 +316,3 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
   }
 }
-
