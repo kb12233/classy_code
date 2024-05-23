@@ -67,8 +67,28 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _isGenerating = true;
       });
-
-      String? code = await converter.convert(_selectedFile!, selectedLanguage);
+      String? code;
+      try {
+        code = await converter.convert(_selectedFile!, selectedLanguage);
+      } on Exception catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('CodeGenerationError'),
+              content: Text('Oops! Encountered during code generation. Please try again. :)'),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
 
       setState(() {
         generatedCode = code ?? '';
@@ -102,20 +122,12 @@ class _HomePageState extends State<HomePage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0), // Adjust the height as needed
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppBar(
               backgroundColor: Colors.black,
               leading: Padding(
                 padding: const EdgeInsets.only(top: 15),
-                child: IconButton(
-                  icon: Icon(Icons.arrow_back,
-                      size: 30), // Resize the back button
-                  color: Colors.white, // Change the color of the back button
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pop(); // Define the back button action
-                  },
-                ),
               ),
               title: Row(
                 children: [
@@ -144,14 +156,17 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 IconButton(
                   icon: Icon(Icons.account_circle, color: Colors.white),
-                  iconSize: 40,
+                  iconSize: 30,
+                  hoverColor: Colors.white10,
                   onPressed: () {}, // Implement user icon button action
                 ),
                 IconButton(
-                  icon: Icon(Icons.menu, color: Colors.white),
+                  icon: Icon(Icons.folder, color: Colors.white),
                   iconSize: 30,
+                  hoverColor: Colors.white10,
                   onPressed: () {}, // Implement menu icon button action
                 ),
+                SizedBox(width: 6.0,)
               ],
             ),
             Container(
@@ -170,65 +185,92 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 17.0,
+                          top: 20.0,
+                        ),
+                        child: Text(
+                          'Class Diagram',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
                       SizedBox(
-                        height: 700,
-                        width: 900,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF202124),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            if (_selectedFile != null)
-                              Positioned.fill(
-                                child: ClipRRect(
+                        height: 11.0 // Add some spacing between the header and the content
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 17.0, 
+                          right: 15.0,
+                        ),
+                        child: SizedBox(
+                          height: 650,
+                          width: 900,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF202124),
                                   borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.file(
-                                    _selectedFile!,
-                                    fit: BoxFit.cover,
-                                  ),
                                 ),
                               ),
-                            Positioned(
-                              bottom: _selectedFile != null ? 20.0 : null,
-                              right: _selectedFile != null ? 20.0 : null,
-                              child: Material(
-                                color: Color(0xFF31363F),
-                                borderRadius: BorderRadius.circular(50),
-                                child: InkWell(
+                              if (_selectedFile != null)
+                                Positioned.fill(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: InteractiveViewer(
+                                      minScale: 0.5,
+                                      maxScale: 10.0,
+                                      child: Image.file(
+                                        _selectedFile!,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              Positioned(
+                                bottom: _selectedFile != null ? 20.0 : null,
+                                right: _selectedFile != null ? 20.0 : null,
+                                child: Material(
+                                  color: Color(0xFF31363F),
                                   borderRadius: BorderRadius.circular(50),
-                                  onTap: _pickFile,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Icon(
-                                      Icons.add,
-                                      size: 60,
-                                      color: Color(0xFFB8DBD9),
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(50),
+                                    onTap: _pickFile,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 60,
+                                        color: Color(0xFFB8DBD9),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            if (_selectedFile == null && !_isUploading)
-                              Positioned(
-                                top: 420.0,
-                                child: Text(
-                                  'Upload Class Diagram',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFB8DBD9),
-                                    fontFamily:
-                                        GoogleFonts.jetBrainsMono().fontFamily,
+                              if (_selectedFile == null && !_isUploading)
+                                Positioned(
+                                  top: 420.0,
+                                  child: Text(
+                                    'Upload Class Diagram',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFFB8DBD9),
+                                      fontFamily:
+                                          GoogleFonts.jetBrainsMono().fontFamily,
+                                    ),
                                   ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Row(
@@ -264,7 +306,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              VerticalDivider(thickness: 1),
+              VerticalDivider(
+                thickness: 1,
+                color: Colors.black,
+              ),
               Expanded(
                 child: GeneratedCodeSection(generatedCode: generatedCode),
               ),
@@ -378,11 +423,8 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
               Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.copy, color: Colors.white),
-                    onPressed: () {}, // Implement code copy functionality
-                  ),
-                  IconButton(
                     icon: Icon(Icons.save, color: Colors.white),
+                    hoverColor: Colors.white10,
                     onPressed: () {}, // Implement code save functionality
                   ),
                 ],
@@ -390,8 +432,8 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
             ],
           ),
           SizedBox(
-              height:
-                  8.0), // Add some spacing between the header and the content
+            height: 8.0 // Add some spacing between the header and the content
+          ), 
           widget.generatedCode.isNotEmpty
               ? Expanded(
                   child: SingleChildScrollView(
@@ -429,13 +471,18 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                     ),
                   ),
                 )
-              : Text(
-                  'This section will display the generated code',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+              : SingleChildScrollView(
+                child: SizedBox(
+                    height: 650,
+                    width: 900,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFF202124),
+                          borderRadius: BorderRadius.circular(8.0)
+                        ),
+                      ),
                   ),
-                ),
+              ),
         ],
       ),
     );

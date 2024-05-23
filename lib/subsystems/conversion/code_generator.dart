@@ -14,7 +14,14 @@ class CodeGenerator {
 
     final image = await (File(classdiagramImage!.path).readAsBytes());
     final prompt = TextPart(
-        "Generate $language code from the given class diagram image. Only provide the code (wrapped in a Markdown code block).");
+        '''
+        Generate $language code from the given class diagram image.
+        Only provide the code (wrapped in a Markdown code block).
+        Don't put comments.You don't need to bother with the implementation of some methods.
+        Just focus on depicting the correct structure of the classes as well as representing 
+        the correct relationships/association.
+        '''        
+      );
     final imagePart = [DataPart('image/jpeg', image)];
 
     final response = await model.generateContent([
