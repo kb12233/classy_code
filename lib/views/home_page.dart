@@ -4,6 +4,7 @@ import 'package:classy_code/img_code_converter.dart';
 import 'package:classy_code/input_manager.dart';
 import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/subsystems/output_management/save_status.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prism/flutter_prism.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,6 +24,24 @@ class _HomePageState extends State<HomePage> {
   String generatedCode = "";
   bool _isUploading = false;
   bool _isGenerating = false;
+  String userEmail = '';
+  bool _isHovering = false;
+  bool _isHoveringLogout = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserEmail();
+  }
+
+  void getUserEmail() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userEmail = user.email ?? '';
+      });
+    }
+  }
 
   void _pickFile() async {
     File? file = await inputManager.uploadInput();
@@ -158,21 +177,65 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               actions: [
-                IconButton(
-                  icon: Icon(Icons.account_circle, color: Colors.white),
-                  iconSize: 30,
-                  hoverColor: Colors.white10,
-                  onPressed: () {}, // Implement user icon button action
+                MouseRegion(
+                  onEnter: (_) {
+                    setState(() {
+                      _isHoveringLogout = true;
+                    });
+                  },
+                  onExit: (_) {
+                    setState(() {
+                      _isHoveringLogout = false;
+                    });
+                  },
+                  child: PopupMenuButton<String>(
+                    icon: Icon(Icons.account_circle,
+                        color: _isHovering || _isHoveringLogout
+                            ? Colors.grey
+                            : Colors.white),
+                    iconSize: 30,
+                    color: Colors.black12,
+                    onSelected: (String result) {
+                      if (result == 'logout') {
+                        FirebaseAuth.instance.signOut();
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        value:
+                            'user_email', // Changed value for the email entry
+                        child: ListTile(
+                          title: Text(
+                            userEmail,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily:
+                                  GoogleFonts.jetBrainsMono().fontFamily,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'logout',
+                        mouseCursor: SystemMouseCursors.click,
+                        child: Text(
+                          'Logout',
+                          style: TextStyle(
+                            color: _isHoveringLogout
+                                ? Colors.white
+                                : Colors
+                                    .grey, // Change color when hovered or clicked
+                            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.folder, color: Colors.white),
-                  iconSize: 30,
-                  hoverColor: Colors.white10,
-                  onPressed: () {}, // Implement menu icon button action
-                ),
-                SizedBox(
-                  width: 6.0,
-                )
               ],
             ),
             Container(
