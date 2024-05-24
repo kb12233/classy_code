@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:classy_code/img_code_converter.dart';
 import 'package:classy_code/input_manager.dart';
+import 'package:classy_code/output_manager.dart';
+import 'package:classy_code/subsystems/output_management/save_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prism/flutter_prism.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   String selectedLanguage = 'Select Language';
   final InputManager inputManager = InputManager();
   final ImageToCodeConverter converter = ImageToCodeConverter();
+  final OutPutManager outPutManager = OutPutManager();
   File? _selectedFile;
   String generatedCode = "";
   bool _isUploading = false;
@@ -76,7 +79,8 @@ class _HomePageState extends State<HomePage> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('CodeGenerationError'),
-              content: Text('Oops! Encountered during code generation. Please try again. :)'),
+              content: Text(
+                  'Oops! Encountered during code generation. Please try again. :)'),
               actions: [
                 TextButton(
                   child: Text('OK'),
@@ -166,7 +170,9 @@ class _HomePageState extends State<HomePage> {
                   hoverColor: Colors.white10,
                   onPressed: () {}, // Implement menu icon button action
                 ),
-                SizedBox(width: 6.0,)
+                SizedBox(
+                  width: 6.0,
+                )
               ],
             ),
             Container(
@@ -200,11 +206,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       SizedBox(
-                        height: 11.0 // Add some spacing between the header and the content
-                      ),
+                          height:
+                              11.0 // Add some spacing between the header and the content
+                          ),
                       Padding(
                         padding: const EdgeInsets.only(
-                          left: 17.0, 
+                          left: 17.0,
                           right: 15.0,
                         ),
                         child: SizedBox(
@@ -264,8 +271,8 @@ class _HomePageState extends State<HomePage> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xFFB8DBD9),
-                                      fontFamily:
-                                          GoogleFonts.jetBrainsMono().fontFamily,
+                                      fontFamily: GoogleFonts.jetBrainsMono()
+                                          .fontFamily,
                                     ),
                                   ),
                                 ),
@@ -311,7 +318,10 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.black,
               ),
               Expanded(
-                child: GeneratedCodeSection(generatedCode: generatedCode),
+                child: GeneratedCodeSection(
+                  generatedCode: generatedCode,
+                  outPutManager: outPutManager,
+                ),
               ),
             ],
           ),
@@ -393,8 +403,10 @@ class GenerateButton extends StatelessWidget {
 
 class GeneratedCodeSection extends StatefulWidget {
   final String generatedCode;
+  final OutPutManager outPutManager;
 
-  const GeneratedCodeSection({Key? key, required this.generatedCode})
+  const GeneratedCodeSection(
+      {Key? key, required this.generatedCode, required this.outPutManager})
       : super(key: key);
 
   @override
@@ -425,15 +437,17 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                   IconButton(
                     icon: Icon(Icons.save, color: Colors.white),
                     hoverColor: Colors.white10,
-                    onPressed: () {}, // Implement code save functionality
+                    onPressed: () async {
+                      await saveCode(context, widget.generatedCode);
+                    }, // Implement code save functionality
                   ),
                 ],
               ),
             ],
           ),
           SizedBox(
-            height: 8.0 // Add some spacing between the header and the content
-          ), 
+              height: 8.0 // Add some spacing between the header and the content
+              ),
           widget.generatedCode.isNotEmpty
               ? Expanded(
                   child: SingleChildScrollView(
@@ -472,22 +486,48 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                   ),
                 )
               : SingleChildScrollView(
-                child: SizedBox(
+                  child: SizedBox(
                     height: 650,
                     width: 900,
                     child: Container(
-                        decoration: BoxDecoration(
+                      decoration: BoxDecoration(
                           color: Color(0xFF202124),
-                          borderRadius: BorderRadius.circular(8.0)
-                        ),
-                      ),
+                          borderRadius: BorderRadius.circular(8.0)),
+                    ),
                   ),
-              ),
+                ),
         ],
       ),
     );
   }
+
+  Future<void> saveCode(BuildContext context, code) async {
+    // Extract language and code
+    final RegExp codeBlockRegExp = RegExp(r'```(\w+)\n([\s\S]*?)```');
+    final match = codeBlockRegExp.firstMatch(code);
+    if (match == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid code block format')),
+      );
+      return;
+    }
+
+    final language = match.group(1)!;
+    print(language);
+
+    final codeContent = match.group(2)!;
+
+    SaveStatus? saveStatus =
+        await widget.outPutManager.save(codeContent, language);
+    String? outputPath = saveStatus.outputPath;
+
+    if (outputPath != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('File saved: $outputPath')),
+      );
+    }
+  }
 }
 
 // Replace with a list of actual supported languages
-final languages = ['Select Language', 'Dart', 'Python', 'Java'];
+final languages = ['Select Language', 'Dart', 'Python', 'Java', 'JavaScript'];

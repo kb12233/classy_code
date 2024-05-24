@@ -24,8 +24,8 @@ class Verifier {
     ]);
     
 
-    if (response.text == " true") {
-      print(response.text);
+    if (response.text?.trim() == "true") {
+      print(response.text?.trim());
       return true;
     }
 
