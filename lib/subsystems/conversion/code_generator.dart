@@ -10,18 +10,20 @@ class CodeGenerator {
       exit(1);
     }
 
-    final model = GenerativeModel(model: 'gemini-pro-vision', apiKey: apiKey);
+    GenerationConfig config = GenerationConfig(
+      maxOutputTokens: 1000000
+    );
+
+    final model = GenerativeModel(model: 'gemini-pro-vision', apiKey: apiKey, generationConfig: config);
 
     final image = await (File(classdiagramImage!.path).readAsBytes());
-    final prompt = TextPart(
-        '''
+    final prompt = TextPart('''
         Generate $language code from the given class diagram image.
-        Only provide the code (wrapped in a Markdown code block).
+        Only provide the code (wrapped in ONE Markdown code block).
         Don't put comments.You don't need to bother with the implementation of some methods.
         Just focus on depicting the correct structure of the classes as well as representing 
         the correct relationships/association.
-        '''        
-      );
+        ''');
     final imagePart = [DataPart('image/jpeg', image)];
 
     final response = await model.generateContent([
