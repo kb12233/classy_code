@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                             ? Colors.grey
                             : Colors.white),
                     iconSize: 30,
-                    color: Colors.black12,
+                    color: Colors.grey[850],
                     onSelected: (String result) {
                       if (result == 'logout') {
                         FirebaseAuth.instance.signOut();
@@ -225,7 +225,7 @@ class _HomePageState extends State<HomePage> {
                           'Logout',
                           style: TextStyle(
                             color: _isHoveringLogout
-                                ? Colors.white
+                                ? Colors.red
                                 : Colors
                                     .grey, // Change color when hovered or clicked
                             fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
