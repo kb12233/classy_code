@@ -11,7 +11,7 @@ class CodeGenerator {
     }
 
     GenerationConfig config = GenerationConfig(
-      maxOutputTokens: 1000000
+      maxOutputTokens: 1000000000
     );
 
     final model = GenerativeModel(model: 'gemini-pro-vision', apiKey: apiKey, generationConfig: config);
@@ -20,9 +20,9 @@ class CodeGenerator {
     final prompt = TextPart('''
         Generate $language code from the given class diagram image.
         Only provide the code (wrapped in ONE Markdown code block).
-        Don't put comments.You don't need to bother with the implementation of some methods.
         Just focus on depicting the correct structure of the classes as well as representing 
-        the correct relationships/association.
+        the correct relationships/associations.
+        Don't put comments. You don't need to bother with the implementation of some methods.
         ''');
     final imagePart = [DataPart('image/jpeg', image)];
 
