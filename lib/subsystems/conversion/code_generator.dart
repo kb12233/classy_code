@@ -14,7 +14,7 @@ class CodeGenerator {
       maxOutputTokens: 1000000000
     );
 
-    final model = GenerativeModel(model: 'gemini-pro-vision', apiKey: apiKey, generationConfig: config);
+    final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey, generationConfig: config);
 
     final image = await (File(classdiagramImage!.path).readAsBytes());
     final prompt = TextPart('''
