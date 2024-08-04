@@ -12,7 +12,7 @@ class Verifier {
       exit(1);
     }
 
-    final model = GenerativeModel(model: 'gemini-pro-vision', apiKey: apiKey);
+    final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
 
     final image = await (File(classdiagramImage.path).readAsBytes());
     final prompt = TextPart(
