@@ -130,6 +130,20 @@ class InsightsDataRetriever {
     Map<String, double> typesOfRelationships =
         await getTypesOfRelationships(classdiagramImage);
     
+    List<String> relationshipTypes = [
+      'association',
+      'aggregation',
+      'composition',
+      'inheritance',
+      'realization',
+      'dependency'
+    ];
+
+    for (int i = 0; i < relationshipTypes.length; i++) {
+      typesOfRelationships[relationshipTypes[i]] =
+          typesOfRelationships[relationshipTypes[i]]! / totalRelationships * 100;
+    }
+    
     InsightsData insightsData = InsightsData(
       totalClasses: totalClasses,
       totalRelationships: totalRelationships,
