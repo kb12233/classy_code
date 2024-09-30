@@ -56,3 +56,10 @@ windows/flutter/generated_plugins.cmake
 *.lock
 lib/tempCodeRunnerFile.dart
 .env
+lib/firebase_options.dart
+ios/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
+macos/Runner/GoogleService-Info.plist
+macos/firebase_app_id_file.json
+ios/firebase_app_id_file.json
+lib/firebase_options.dart
