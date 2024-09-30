@@ -39,7 +39,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
             children: [
               SizedBox(
                 // for insights ni
-                height: 180,
+                height: 160,
                 width: 445,
                 child: Container(
                   decoration: BoxDecoration(
@@ -52,8 +52,8 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                 children: [
                   SizedBox(
                     // for insights ni
-                    height: 85,
-                    width: 445,
+                    height: 75,
+                    width: 272,
                     child: Container(
                       decoration: BoxDecoration(
                           color: Color(0xFF202124),
@@ -63,8 +63,8 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                   SizedBox(height: 10),
                   SizedBox(
                     // for insights ni
-                    height: 85,
-                    width: 440,
+                    height: 75,
+                    width: 272,
                     child: Container(
                       decoration: BoxDecoration(
                           color: Color(0xFF202124),
