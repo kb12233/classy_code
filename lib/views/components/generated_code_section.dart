@@ -1,8 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/subsystems/output_management/save_status.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_prism/flutter_prism.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
 
 class GeneratedCodeSection extends StatefulWidget {
@@ -18,6 +20,14 @@ class GeneratedCodeSection extends StatefulWidget {
 }
 
 class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
+  double screenHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height;
+  }
+
+  double screenWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,77 +40,97 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
             style: TextStyle(
               color: Colors.white,
               fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-              fontSize: 20,
+              fontSize: screenWidth(context) * 0.013,
             ),
           ),
-          SizedBox(height: 8.0 // space
-              ),
+          SizedBox(
+            height: screenHeight(context) * 0.01,
+          ),
           Row(
             children: [
-              SizedBox(
-                // for insights ni
-                height: 160,
-                width: 445,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Color(0xFF202124),
-                      borderRadius: BorderRadius.circular(8.0)),
+              Expanded(
+                child: SizedBox(
+                  // for insights ni
+                  //height: 160,
+                  height: screenHeight(context) * 0.2,
+                  width: screenWidth(context) * 0.3,
+                  //width: 445,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Color(0xFF202124),
+                        borderRadius: BorderRadius.circular(8.0)),
+                  ),
                 ),
               ),
-              SizedBox(width: 10),
-              Column(
-                children: [
-                  SizedBox(
-                    // for insights ni
-                    height: 75,
-                    width: 272,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xFF202124),
-                          borderRadius: BorderRadius.circular(8.0)),
+              SizedBox(width: screenWidth(context) * 0.01),
+              Expanded(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      // for insights ni
+                      //height: 75,
+                      height: screenHeight(context) * 0.09,
+                      width: double.infinity,
+                      //width: 272,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Color(0xFF202124),
+                            borderRadius: BorderRadius.circular(8.0)),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    // for insights ni
-                    height: 75,
-                    width: 272,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xFF202124),
-                          borderRadius: BorderRadius.circular(8.0)),
+                    SizedBox(
+                      height: screenHeight(context) * 0.015,
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      // for insights ni
+                      height: screenHeight(context) * 0.09,
+                      //width: 272,
+                      width: double.infinity,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Color(0xFF202124),
+                            borderRadius: BorderRadius.circular(8.0)),
+                      ),
+                    ),
+                  ],
+                ),
               )
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Generated Code',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                  fontSize: 20,
+              Padding(
+                padding: EdgeInsets.only(top: screenHeight(context) * 0.01),
+                child: Text(
+                  'Generated Code',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                    fontSize: screenWidth(context) * 0.013,
+                  ),
                 ),
               ),
               Row(
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.save, color: Colors.white),
-                    hoverColor: Colors.white10,
-                    onPressed: () async {
-                      await saveCode(context, widget.generatedCode);
-                    }, // Implement code save functionality
+                  Padding(
+                    padding: EdgeInsets.only(top: screenHeight(context) * 0.01),
+                    child: IconButton(
+                      icon: Icon(Icons.save, color: Colors.white),
+                      hoverColor: Colors.white10,
+                      iconSize: screenWidth(context) * 0.015,
+                      onPressed: () async {
+                        await saveCode(context, widget.generatedCode);
+                      }, // Implement code save functionality
+                    ),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(height: 8.0 // space
-              ),
+          SizedBox(
+            height: screenHeight(context) * 0.001, // space
+          ),
           widget.generatedCode.isNotEmpty
               ? Expanded(
                   child: SingleChildScrollView(
@@ -126,7 +156,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                         ),
                         codeBlock: TextStyle(
                           color: Colors.white,
-                          fontSize: 14,
+                          fontSize: screenWidth(context) * 0.01,
                           letterSpacing: -0.3,
                           fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                         ),
@@ -140,12 +170,15 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                 )
               : SingleChildScrollView(
                   child: SizedBox(
-                    height: 430,
-                    width: 900,
+                    //height: 430,
+                    height: screenHeight(context) * 0.54,
+                    width: screenWidth(context) * 0.9,
+                    //width: 900,
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Color(0xFF202124),
-                          borderRadius: BorderRadius.circular(8.0)),
+                        color: Color(0xFF202124),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
                   ),
                 ),

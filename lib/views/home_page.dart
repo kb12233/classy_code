@@ -1,14 +1,16 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:io';
 
 import 'package:classy_code/img_code_converter.dart';
 import 'package:classy_code/input_manager.dart';
 import 'package:classy_code/output_manager.dart';
+import 'package:classy_code/views/components/generate_button.dart';
 import 'package:classy_code/views/components/generated_code_section.dart';
+import 'package:classy_code/views/components/loading_overlay.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:classy_code/views/components/loading_overlay.dart';
-import 'package:classy_code/views/components/generate_button.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,6 +29,14 @@ class _HomePageState extends State<HomePage> {
   String userEmail = '';
   bool _isHovering = false;
   bool _isHoveringLogout = false;
+
+  double screenHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height;
+  }
+
+  double screenWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width;
+  }
 
   @override
   void initState() {
@@ -143,21 +153,23 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0), // Adjust the height as needed
+        //preferredSize: Size.fromHeight(70.0), // Adjust the height as needed
+        preferredSize: Size.fromHeight(screenHeight(context) * 0.1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppBar(
               backgroundColor: Colors.black,
               leading: Padding(
-                padding: const EdgeInsets.only(top: 15),
+                padding: EdgeInsets.only(top: screenHeight(context) * 0.02),
               ),
               title: Stack(
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding:
+                          EdgeInsets.only(top: screenHeight(context) * 0.025),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -173,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white,
                                     fontFamily:
                                         GoogleFonts.jetBrainsMono().fontFamily,
-                                    fontSize: 25,
+                                    fontSize: screenWidth(context) * 0.01,
                                   ),
                                 ),
                                 Padding(
@@ -183,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Icon(
                                     Icons.arrow_drop_down, // Dropdown icon
                                     color: Colors.white,
-                                    size: 25,
+                                    size: screenWidth(context) * 0.015,
                                   ),
                                 ),
                               ],
@@ -243,22 +255,25 @@ class _HomePageState extends State<HomePage> {
                           .min, // Keeps Row tight around its content
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: EdgeInsets.only(
+                              top: screenHeight(context) * 0.02,
+                              bottom: screenHeight(context) * 0.02),
                           child: Image.asset(
                             'lib/images/logo_dark.png',
-                            width: 50,
-                            height: 50,
+                            width: screenWidth(context) * 0.08,
+                            height: screenHeight(context) * 0.06,
                           ),
                         ),
-                        SizedBox(
-                            width:
-                                10), // Optional: add space between logo and text
+                        // SizedBox(
+                        //     width: screenWidth(context) *
+                        //         0.0), // Optional: add space between logo and text
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: Text(
                             'ClassyCode',
                             style: TextStyle(
                               color: Colors.white,
+                              fontSize: screenWidth(context) * 0.015,
                               fontFamily:
                                   GoogleFonts.jetBrainsMono().fontFamily,
                             ),
@@ -282,11 +297,17 @@ class _HomePageState extends State<HomePage> {
                     });
                   },
                   child: PopupMenuButton<String>(
-                    icon: Icon(Icons.account_circle,
-                        color: _isHovering || _isHoveringLogout
-                            ? Colors.grey
-                            : Colors.white),
-                    iconSize: 30,
+                    icon: Padding(
+                      padding: EdgeInsets.only(
+                        top: screenHeight(context) * 0.005,
+                      ),
+                      child: Icon(Icons.account_circle,
+                          color: _isHovering || _isHoveringLogout
+                              ? Colors.grey
+                              : Colors.white),
+                    ),
+                    //iconSize: 30,
+                    iconSize: screenWidth(context) * 0.025,
                     color: Colors.grey[850],
                     onSelected: (String result) {
                       if (result == 'logout') {
@@ -306,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.white,
                               fontFamily:
                                   GoogleFonts.jetBrainsMono().fontFamily,
-                              fontSize: 15,
+                              fontSize: screenWidth(context) * 0.01,
                             ),
                           ),
                         ),
@@ -322,7 +343,7 @@ class _HomePageState extends State<HomePage> {
                                 : Colors
                                     .grey, // Change color when hovered or clicked
                             fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                            fontSize: 15,
+                            fontSize: screenWidth(context) * 0.01,
                           ),
                         ),
                       ),
@@ -331,10 +352,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            Container(
-              height: 10.0, // Adjust the height of the bottom margin as needed
-              color: Colors.black, // Same color as the AppBar to blend in
-            ),
+            // Container(
+            //   height: 10.0, // Adjust the height of the bottom margin as needed
+            //   color: Colors.white, // Same color as the AppBar to blend in
+            // ),
           ],
         ),
       ),
@@ -348,37 +369,41 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(
-                          left: 17.0,
-                          top: 20.0,
+                        padding: EdgeInsets.only(
+                          //left: 17.0,
+                          left: screenWidth(context) * 0.01,
+                          top: screenHeight(context) * 0.02,
+                          //top: 20.0,
                         ),
                         child: Text(
                           'Class Diagram',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                            fontSize: 20,
+                            fontSize: screenWidth(context) * 0.013,
                           ),
                         ),
                       ),
                       SizedBox(
-                          height:
-                              11.0 // Add some spacing between the header and the content
-                          ),
+                        height: screenHeight(context) * 0.01,
+                      ),
                       Padding(
-                        padding: const EdgeInsets.only(
-                          left: 17.0,
-                          right: 15.0,
+                        padding: EdgeInsets.only(
+                          left: screenWidth(context) * 0.01,
                         ),
                         child: SizedBox(
-                          height: 650,
-                          width: 900,
+                          //height: 650,
+                          height: screenHeight(context) * 0.8,
+                          width: screenWidth(context) * 0.9,
+                          //width: 900,
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
                               Container(
-                                width: double.infinity,
-                                height: double.infinity,
+                                //width: double.infinity,
+                                width: screenWidth(context) * 0.65,
+                                height: screenHeight(context) * 0.8,
+                                //height: double.infinity,
                                 decoration: BoxDecoration(
                                   color: Color(0xFF202124),
                                   borderRadius: BorderRadius.circular(8.0),
@@ -399,8 +424,12 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               Positioned(
-                                bottom: _selectedFile != null ? 20.0 : null,
-                                right: _selectedFile != null ? 20.0 : null,
+                                bottom: _selectedFile != null
+                                    ? screenHeight(context) * 0.01
+                                    : null,
+                                right: _selectedFile != null
+                                    ? screenWidth(context) * 0.01
+                                    : null,
                                 child: Material(
                                   color: Color(0xFF31363F),
                                   borderRadius: BorderRadius.circular(50),
@@ -408,10 +437,11 @@ class _HomePageState extends State<HomePage> {
                                     borderRadius: BorderRadius.circular(50),
                                     onTap: _pickFile,
                                     child: Padding(
-                                      padding: const EdgeInsets.all(20),
+                                      padding: EdgeInsets.all(
+                                          screenWidth(context) * 0.01),
                                       child: Icon(
                                         Icons.add,
-                                        size: 60,
+                                        size: screenWidth(context) * 0.03,
                                         color: Color(0xFFB8DBD9),
                                       ),
                                     ),
@@ -420,11 +450,12 @@ class _HomePageState extends State<HomePage> {
                               ),
                               if (_selectedFile == null && !_isUploading)
                                 Positioned(
-                                  top: 420.0,
+                                  //top: 420.0,
+                                  top: screenHeight(context) * 0.47,
                                   child: Text(
                                     'Upload Class Diagram',
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: screenWidth(context) * 0.01,
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xFFB8DBD9),
                                       fontFamily: GoogleFonts.jetBrainsMono()
