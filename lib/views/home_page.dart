@@ -2,8 +2,10 @@
 
 import 'dart:io';
 
+import 'package:classy_code/controllers/history_controller.dart';
 import 'package:classy_code/img_code_converter.dart';
 import 'package:classy_code/input_manager.dart';
+import 'package:classy_code/models/insight_data.dart';
 import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/views/components/generate_button.dart';
 import 'package:classy_code/views/components/generated_code_section.dart';
@@ -22,8 +24,12 @@ class _HomePageState extends State<HomePage> {
   final InputManager inputManager = InputManager();
   final ImageToCodeConverter converter = ImageToCodeConverter();
   final OutPutManager outPutManager = OutPutManager();
+  final HistoryController historyController = HistoryController();
   File? _selectedFile;
   String generatedCode = "";
+  int totalClasses = 0;
+  int totalRelationships = 0;
+  Map<String, double> typesOfRelationships = {};
   bool _isUploading = false;
   bool _isGenerating = false;
   String userEmail = '';
@@ -123,8 +129,36 @@ class _HomePageState extends State<HomePage> {
         );
       }
 
+      final RegExp codeBlockRegExp = RegExp(r'```(\w+)\n([\s\S]*?)```');
+      final match = codeBlockRegExp.firstMatch(code!);
+      if (match == null) {
+        print('Invalid code block format');
+        return;
+      }
+
+      final language = match.group(1)!;
+      print(language);
+
+      final codeContent = match.group(2)!;
+
+      InsightsData insightsData = await converter.extractInsights(_selectedFile!);
+      
+      try {
+        String? result = await HistoryController.createHistoryItem(
+            FirebaseAuth.instance.currentUser!.uid,
+            codeContent,
+            _selectedFile,
+            insightsData
+        );
+      } on Exception catch (e) {
+        print('Error creating history item: $e');
+      }
+
       setState(() {
         generatedCode = code ?? '';
+        totalClasses = insightsData.totalClasses;
+        totalRelationships = insightsData.totalRelationships;
+        typesOfRelationships = insightsData.typesOfRelationships;
         _isGenerating = false;
       });
     } else {
