@@ -3,13 +3,10 @@ import 'dart:io';
 import 'package:classy_code/img_code_converter.dart';
 import 'package:classy_code/input_manager.dart';
 import 'package:classy_code/output_manager.dart';
-import 'package:classy_code/subsystems/output_management/save_status.dart';
 import 'package:classy_code/views/components/generated_code_section.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_prism/flutter_prism.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:markdown_viewer/markdown_viewer.dart';
 import 'package:classy_code/views/components/loading_overlay.dart';
 import 'package:classy_code/views/components/generate_button.dart';
 
@@ -155,26 +152,119 @@ class _HomePageState extends State<HomePage> {
               leading: Padding(
                 padding: const EdgeInsets.only(top: 15),
               ),
-              title: Row(
+              title: Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Image.asset(
-                      'lib/images/logo_dark.png',
-                      width: 50,
-                      height: 50,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // PopupMenuButton for History
+                          PopupMenuButton<String>(
+                            icon: Row(
+                              mainAxisSize: MainAxisSize
+                                  .min, // Keep the row tight around its content
+                              children: [
+                                Text(
+                                  'History',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily:
+                                        GoogleFonts.jetBrainsMono().fontFamily,
+                                    fontSize: 25,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left:
+                                          4.0), // Add space between text and icon
+                                  child: Icon(
+                                    Icons.arrow_drop_down, // Dropdown icon
+                                    color: Colors.white,
+                                    size: 25,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            iconSize: 30,
+                            color: Colors.grey[850],
+                            onSelected: (String result) {
+                              // Define what happens when a history item is selected
+                            },
+                            itemBuilder: (BuildContext context) =>
+                                <PopupMenuEntry<String>>[
+                              // Example history items
+                              PopupMenuItem<String>(
+                                value: 'History Item 1',
+                                child: Text(
+                                  'History Item 1',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily:
+                                        GoogleFonts.jetBrainsMono().fontFamily,
+                                  ),
+                                ),
+                              ),
+                              PopupMenuItem<String>(
+                                value: 'History Item 2',
+                                child: Text(
+                                  'History Item 2',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily:
+                                        GoogleFonts.jetBrainsMono().fontFamily,
+                                  ),
+                                ),
+                              ),
+                              PopupMenuItem<String>(
+                                value: 'History Item 3',
+                                child: Text(
+                                  'History Item 3',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily:
+                                        GoogleFonts.jetBrainsMono().fontFamily,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(
-                      width: 10), // Optional: add space between logo and text
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      'ClassyCode',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                      ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize
+                          .min, // Keeps Row tight around its content
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Image.asset(
+                            'lib/images/logo_dark.png',
+                            width: 50,
+                            height: 50,
+                          ),
+                        ),
+                        SizedBox(
+                            width:
+                                10), // Optional: add space between logo and text
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Text(
+                            'ClassyCode',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily:
+                                  GoogleFonts.jetBrainsMono().fontFamily,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -399,8 +489,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
 
 // Replace with a list of actual supported languages
 final languages = ['Select Language', 'Dart', 'Python', 'Java', 'JavaScript'];
