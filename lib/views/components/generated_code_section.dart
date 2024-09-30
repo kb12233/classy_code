@@ -25,6 +25,56 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            'Code Generation Insights',
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(height: 8.0 // space
+              ),
+          Row(
+            children: [
+              SizedBox(
+                // for insights ni
+                height: 180,
+                width: 445,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Color(0xFF202124),
+                      borderRadius: BorderRadius.circular(8.0)),
+                ),
+              ),
+              SizedBox(width: 10),
+              Column(
+                children: [
+                  SizedBox(
+                    // for insights ni
+                    height: 85,
+                    width: 445,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Color(0xFF202124),
+                          borderRadius: BorderRadius.circular(8.0)),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  SizedBox(
+                    // for insights ni
+                    height: 85,
+                    width: 440,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Color(0xFF202124),
+                          borderRadius: BorderRadius.circular(8.0)),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -49,8 +99,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
               ),
             ],
           ),
-          SizedBox(
-              height: 8.0 // Add some spacing between the header and the content
+          SizedBox(height: 8.0 // space
               ),
           widget.generatedCode.isNotEmpty
               ? Expanded(
@@ -91,7 +140,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                 )
               : SingleChildScrollView(
                   child: SizedBox(
-                    height: 650,
+                    height: 430,
                     width: 900,
                     child: Container(
                       decoration: BoxDecoration(
