@@ -171,7 +171,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
               : SingleChildScrollView(
                   child: SizedBox(
                     //height: 430,
-                    height: screenHeight(context) * 0.54,
+                    height: screenHeight(context) * 0.44,
                     width: screenWidth(context) * 0.9,
                     //width: 900,
                     child: Container(

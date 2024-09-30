@@ -168,8 +168,9 @@ class _HomePageState extends State<HomePage> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding:
-                          EdgeInsets.only(top: screenHeight(context) * 0.025),
+                      padding: EdgeInsets.only(
+                        top: screenHeight(context) * 0.035,
+                      ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -185,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white,
                                     fontFamily:
                                         GoogleFonts.jetBrainsMono().fontFamily,
-                                    fontSize: screenWidth(context) * 0.01,
+                                    fontSize: screenWidth(context) * 0.012,
                                   ),
                                 ),
                                 Padding(
@@ -393,7 +394,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: SizedBox(
                           //height: 650,
-                          height: screenHeight(context) * 0.8,
+                          height: screenHeight(context) * 0.7,
                           width: screenWidth(context) * 0.9,
                           //width: 900,
                           child: Stack(
