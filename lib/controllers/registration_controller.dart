@@ -13,7 +13,7 @@ class RegistrationController {
         return 'Please enter your name.';
       } else if (email.isEmpty) {
         return 'Please enter your email address.';
-      } else if (!email.contains('@') || !email.contains('.')) {
+      } else if (!email.contains('@') || !email.contains('.com')) {
         return 'Please enter a valid email address.';
       } else if (password.isEmpty) {
         return 'Please enter a password.';

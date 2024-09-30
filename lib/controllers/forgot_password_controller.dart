@@ -8,7 +8,7 @@ class ForgotPasswordControl {
     try {
       if (email.isEmpty) {
         return 'Please enter an email address.';
-      } else if (!email.contains('@') || !email.contains('.')) {
+      } else if (!email.contains('@') || !email.contains('.com')) {
         return 'Please enter a valid email address.';
       } else if (await UserModel.checkUserExists(email)) {
         await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
