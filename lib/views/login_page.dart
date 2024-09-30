@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:ui';
+
+import 'package:classy_code/controllers/forgot_password_controller.dart';
 import 'package:classy_code/controllers/login_controller.dart';
 import 'package:classy_code/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +19,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  final bgColor = const Color(0xFF202124);
+  final btnColor = const Color(0xFF2F4550);
+  final otherColor = const Color(0xFFB8DBD9);
+  final otherColor1 = const Color(0xFF31363F);
 
   Future<void> signInUser() async {
     // show loading circle
@@ -40,16 +48,38 @@ class _LoginPageState extends State<LoginPage> {
     if (result != 'Success') {
       // Handle the error. For example, show a dialog with the error message.
       showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text(result!),
-        ),
-      );
+          context: context,
+          builder: (context) {
+            Future.delayed(Duration(seconds: 2), () {
+              Navigator.of(context).pop(true);
+            });
+
+            return AlertDialog(
+              backgroundColor: bgColor,
+              icon: Icon(
+                Icons.error,
+                color: otherColor,
+              ),
+              title: Text(
+                'Error!',
+                style: TextStyle(
+                  color: otherColor,
+                  fontSize: 20,
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                ),
+              ),
+              content: Text(
+                result.toString(),
+                style: TextStyle(
+                  color: otherColor,
+                  fontSize: 20,
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                ),
+              ),
+            );
+          });
     }
   }
-
-  Future<void> resetPassword() async {}
 
   void displaySignInError(String errorCode) {
     showDialog(
@@ -59,142 +89,191 @@ class _LoginPageState extends State<LoginPage> {
         });
   }
 
-  final bgColor = const Color(0xFF202124);
-  final btnColor = const Color(0xFF2F4550);
-  final otherColor = const Color(0xFFB8DBD9);
-  final otherColor1 = const Color(0xFF31363F);
+  Future<void> resetPassword() async {
+    String email = emailController.text.trim();
+    String? result = await ForgotPasswordControl.resetPassword(email);
+
+    if (result != "Password reset email sent") {
+      showDialog(
+          context: context,
+          builder: (context) {
+            Future.delayed(Duration(seconds: 2), () {
+              Navigator.of(context).pop(true);
+            });
+
+            return AlertDialog(
+              backgroundColor: bgColor,
+              icon: Icon(
+                Icons.error,
+                color: otherColor,
+              ),
+              title: Text(
+                'Error!',
+                style: TextStyle(
+                  color: otherColor,
+                  fontSize: 20,
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                ),
+              ),
+              content: Text(
+                result.toString(),
+                style: TextStyle(
+                  color: otherColor,
+                  fontSize: 20,
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                ),
+              ),
+            );
+          });
+    } else if (result == "Password reset email sent") {
+      showDialog(
+          context: context,
+          builder: (context) {
+            Future.delayed(Duration(seconds: 2), () {
+              Navigator.of(context).pop(true);
+              Navigator.of(context).pop(true);
+            });
+
+            return AlertDialog(
+              backgroundColor: bgColor,
+              icon: Icon(
+                Icons.check,
+                color: otherColor,
+              ),
+              title: Text(
+                'Success!',
+                style: TextStyle(
+                  color: otherColor,
+                  fontSize: 20,
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                ),
+              ),
+              content: Text(
+                'Password reset email sent.',
+                style: TextStyle(
+                  color: otherColor,
+                  fontSize: 20,
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                ),
+              ),
+            );
+          });
+    }
+  }
 
   void resetPasswordDialog(BuildContext context) {
-    TextEditingController newPass = TextEditingController();
-    TextEditingController confirmPass = TextEditingController();
-
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: bgColor.withOpacity(0.5),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(
-                  color: otherColor,
-                  width: 2,
-                )),
-            contentPadding: EdgeInsets.fromLTRB(50, 20, 50, 20),
-            // title: Text('Reset Password',
-            //     style: TextStyle(
-            //       color: otherColor,
-            //     )),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.lock_outline,
-                  color: otherColor,
-                  size: 70,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Reset Password',
-                  style: TextStyle(
+          return Stack(children: [
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Container(
+                color: bgColor.withOpacity(0),
+              ),
+            ),
+            AlertDialog(
+              //backgroundColor: bgColor.withOpacity(0),
+              backgroundColor: bgColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
                     color: otherColor,
-                    fontSize: 30,
-                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                    width: 2,
+                  )),
+              contentPadding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.lock_outline,
+                    color: otherColor,
+                    size: 70,
                   ),
-                ),
-                SizedBox(height: 30),
-                Container(
-                  height: 50,
-                  width: 350,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Color(0xFF2F4550).withOpacity(0.5),
+                  SizedBox(height: 10),
+                  Text(
+                    'Reset Password',
+                    style: TextStyle(
+                      color: otherColor,
+                      fontSize: 30,
+                      fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                    ),
                   ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            labelText: 'New Password',
-                            labelStyle: TextStyle(
-                              color: Color(0xFFB8DBD9),
-                              fontFamily:
-                                  GoogleFonts.jetBrainsMono().fontFamily,
+                  SizedBox(height: 10),
+                  Text(
+                    'Please enter email address to receive password reset link.',
+                    style: TextStyle(
+                      color: otherColor,
+                      fontSize: 20,
+                      fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    height: 50,
+                    width: 400,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Color(0xFF2F4550).withOpacity(0.5),
+                    ),
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextFormField(
+                            controller: emailController,
+                            style: GoogleFonts.jetBrainsMono(
+                              color: Colors.white,
+                            ),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Email address',
+                              labelStyle: TextStyle(
+                                color: Color(0xFFB8DBD9),
+                                fontFamily:
+                                    GoogleFonts.jetBrainsMono().fontFamily,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: btnColor,
+                  ),
+                  onPressed: () {
+                    resetPassword();
+                  },
+                  child: Text(
+                    'Send Email',
+                    style: TextStyle(
+                      color: otherColor,
+                      fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 50,
-                  width: 350,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Color(0xFF2F4550).withOpacity(0.5),
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            labelText: 'Confirm Password',
-                            labelStyle: TextStyle(
-                              color: Color(0xFFB8DBD9),
-                              fontFamily:
-                                  GoogleFonts.jetBrainsMono().fontFamily,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: btnColor,
+                      fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                    ),
                   ),
                 ),
               ],
             ),
-            actions: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: btnColor,
-                ),
-                onPressed: () {
-                  //here ang pag reset
-                  print('The button is clicked!');
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'Reset Password',
-                  style: TextStyle(
-                    color: otherColor,
-                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  //here ang pag cancel
-                  print('The button is clicked!');
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    color: btnColor,
-                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                  ),
-                ),
-              ),
-            ],
-          );
+          ]);
         });
   }
 
@@ -278,7 +357,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 30),
                     // Password input field
                     Container(
-                      width: 500, // Adjust width as needed
+                      width: 500,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         color: Color(0xFF2F4550),
@@ -314,13 +393,12 @@ class _LoginPageState extends State<LoginPage> {
                     // Clickable link for forgot password
                     GestureDetector(
                       onTap: () {
-                        // Add your action for forgot password
                         resetPasswordDialog(context);
                       },
                       child: Text(
                         "Forgot your password?",
                         style: GoogleFonts.jetBrainsMono(
-                          color: otherColor, // Change color here
+                          color: otherColor,
                         ),
                       ),
                     ),
@@ -328,9 +406,7 @@ class _LoginPageState extends State<LoginPage> {
                     // Button for signing in
                     ElevatedButton(
                       onPressed: () {
-                        // Add your action for signing in
                         signInUser();
-                        print('Signed In');
                       },
                       child: Text(
                         "SIGN IN",
@@ -382,15 +458,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 30),
                     OutlinedButton(
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/register'),
-                      child: Text(
-                        'SIGN UP',
-                        style: TextStyle(
-                          color: Color(0xFF31363F),
-                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                        ),
-                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/register');
+                      },
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(150, 50),
                         side: BorderSide(color: otherColor1), // Border color
@@ -398,11 +468,17 @@ class _LoginPageState extends State<LoginPage> {
                           fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                         ),
                       ),
+                      child: Text(
+                        'SIGN UP',
+                        style: TextStyle(
+                          color: Color(0xFF31363F),
+                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                        ),
+                      ),
                     )
                   ],
                 ),
               ),
-              // Placeholder for content in the second container
             ),
           ),
         ],

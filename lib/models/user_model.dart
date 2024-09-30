@@ -74,4 +74,25 @@ class UserModel {
       print('Error updating user data: $e');
     }
   }
+
+  static Future<bool> checkUserExists(String email) async {
+    try {
+      CollectionReference user = FirebaseFirestore.instance.collection('user');
+
+      QuerySnapshot userQuery =
+          await user.where('email', isEqualTo: email).get();
+
+      if (userQuery.size == 1) {
+        print('User exists for email: $email');
+        return true;
+      } else if (userQuery.size == 0) {
+        print('User does not exist for email: $email');
+        return false;
+      }
+    } catch (e) {
+      print('Error checking user exists: $e');
+      return false;
+    }
+    return false;
+  }
 }

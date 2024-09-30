@@ -16,6 +16,55 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  final bgColor = const Color(0xFF202124);
+  final btnColor = const Color(0xFF2F4550);
+  final otherColor = const Color(0xFFB8DBD9);
+  final otherColor1 = const Color(0xFF31363F);
+
+  Future<void> registerUser() async {
+    String name = nameController.text.trim();
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    String? result = await RegistrationController.registerUser(
+        name: name, email: email, password: password);
+    if (result == 'Success') {
+      Navigator.pushNamed(context, '/login');
+    } else if (result != 'Success') {
+      showDialog(
+          context: context,
+          builder: (context) {
+            Future.delayed(Duration(seconds: 1), () {
+              Navigator.of(context).pop(true);
+            });
+
+            return AlertDialog(
+              backgroundColor: bgColor,
+              icon: Icon(
+                Icons.error,
+                color: otherColor,
+              ),
+              title: Text(
+                'Error!',
+                style: TextStyle(
+                  color: otherColor,
+                  fontSize: 20,
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                ),
+              ),
+              content: Text(
+                result.toString(),
+                style: TextStyle(
+                  color: otherColor,
+                  fontSize: 20,
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                ),
+              ),
+            );
+          });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +76,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             Expanded(
               flex: 2,
               child: Container(
-                color: Color(0xFFB8DBD9), // Left color
+                color: otherColor, // Left color
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -46,7 +95,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           Text(
                             "ClassyCode",
                             style: GoogleFonts.jetBrainsMono(
-                              color: Color(0xFF202124),
+                              color: bgColor,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -57,7 +106,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       Text(
                         'Welcome Back!',
                         style: TextStyle(
-                          color: Color(0xFF31363F),
+                          color: otherColor1,
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
                           fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
@@ -69,7 +118,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         child: Text(
                           'Stay in touch! Sign in with your info.',
                           style: TextStyle(
-                            color: Color(0xFF31363F),
+                            color: otherColor1,
                             fontSize: 22,
                             fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                           ),
@@ -85,7 +134,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             child: Text(
                               'SIGN IN',
                               style: TextStyle(
-                                color: Color(0xFF31363F),
+                                color: otherColor1,
                                 fontFamily:
                                     GoogleFonts.jetBrainsMono().fontFamily,
                               ),
@@ -93,7 +142,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             style: OutlinedButton.styleFrom(
                               minimumSize: const Size(150, 50),
                               side: BorderSide(
-                                  color: Color(0xFF31363F)), // Border color
+                                  color: otherColor1), // Border color
                               textStyle: TextStyle(
                                 fontFamily:
                                     GoogleFonts.jetBrainsMono().fontFamily,
@@ -110,7 +159,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             Expanded(
               flex: 3,
               child: Container(
-                color: Color(0xFF202124), // Right color
+                color: bgColor, // Right color
                 alignment: Alignment.centerLeft,
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16.0),
@@ -136,14 +185,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
-                                color: Color(0xFF2F4550),
+                                color: btnColor,
                               ),
                               child: Row(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
-                                    child: Icon(Icons.person,
-                                        color: Color(0xFFB8DBD9)),
+                                    child:
+                                        Icon(Icons.person, color: otherColor),
                                   ),
                                   const SizedBox(width: 10),
                                   Expanded(
@@ -156,7 +205,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                         border: InputBorder.none,
                                         labelText: 'Name',
                                         labelStyle: TextStyle(
-                                          color: Color(0xFFB8DBD9),
+                                          color: otherColor,
                                           fontFamily:
                                               GoogleFonts.jetBrainsMono()
                                                   .fontFamily,
@@ -179,14 +228,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
-                                color: Color(0xFF2F4550),
+                                color: btnColor,
                               ),
                               child: Row(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
-                                    child: Icon(Icons.email,
-                                        color: Color(0xFFB8DBD9)),
+                                    child: Icon(Icons.email, color: otherColor),
                                   ),
                                   const SizedBox(width: 10),
                                   Expanded(
@@ -199,7 +247,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                         border: InputBorder.none,
                                         labelText: 'Email',
                                         labelStyle: TextStyle(
-                                          color: Color(0xFFB8DBD9),
+                                          color: otherColor,
                                           fontFamily:
                                               GoogleFonts.jetBrainsMono()
                                                   .fontFamily,
@@ -222,14 +270,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
-                                color: Color(0xFF2F4550),
+                                color: btnColor,
                               ),
                               child: Row(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
-                                    child: Icon(Icons.lock,
-                                        color: Color(0xFFB8DBD9)),
+                                    child: Icon(Icons.lock, color: otherColor),
                                   ),
                                   const SizedBox(width: 10),
                                   Expanded(
@@ -242,7 +289,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                         border: InputBorder.none,
                                         labelText: 'Password',
                                         labelStyle: TextStyle(
-                                          color: Color(0xFFB8DBD9),
+                                          color: otherColor,
                                           fontFamily:
                                               GoogleFonts.jetBrainsMono()
                                                   .fontFamily,
@@ -263,7 +310,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              _registerUser();
+                              registerUser();
                             },
                             child: Text(
                               'SIGN UP',
@@ -276,7 +323,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             ),
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(150, 50),
-                              backgroundColor: Color(0xFF2F4550),
+                              backgroundColor: btnColor,
                             ),
                           ),
                         ],
@@ -290,29 +337,5 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
       ),
     );
-  }
-
-  void _registerUser() async {
-    String name = nameController.text;
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    try {
-      await RegistrationController.registerUser(
-        name: name,
-        email: email,
-        password: password,
-      );
-
-      // Navigate to the login page after successful registration
-      Navigator.pushNamed(context, '/login');
-    } catch (e) {
-      // Handle registration errors here
-      // You can show an error message to the user if registration fails
-      // For example:
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: Text("Registration failed. Please try again."),
-      // ));
-    }
   }
 }
