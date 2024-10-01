@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:io';
 
 import 'package:classy_code/controllers/history_controller.dart';
@@ -35,14 +33,6 @@ class _HomePageState extends State<HomePage> {
   String userEmail = '';
   bool _isHovering = false;
   bool _isHoveringLogout = false;
-
-  double screenHeight(BuildContext context) {
-    return MediaQuery.of(context).size.height;
-  }
-
-  double screenWidth(BuildContext context) {
-    return MediaQuery.of(context).size.width;
-  }
 
   @override
   void initState() {
@@ -141,15 +131,15 @@ class _HomePageState extends State<HomePage> {
 
       final codeContent = match.group(2)!;
 
-      InsightsData insightsData = await converter.extractInsights(_selectedFile!);
-      
+      InsightsData insightsData =
+          await converter.extractInsights(_selectedFile!);
+
       try {
         String? result = await HistoryController.createHistoryItem(
             FirebaseAuth.instance.currentUser!.uid,
             codeContent,
             _selectedFile,
-            insightsData
-        );
+            insightsData);
       } on Exception catch (e) {
         print('Error creating history item: $e');
       }
@@ -187,24 +177,21 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: PreferredSize(
-        //preferredSize: Size.fromHeight(70.0), // Adjust the height as needed
-        preferredSize: Size.fromHeight(screenHeight(context) * 0.1),
+        preferredSize: Size.fromHeight(70.0), // Adjust the height as needed
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppBar(
               backgroundColor: Colors.black,
               leading: Padding(
-                padding: EdgeInsets.only(top: screenHeight(context) * 0.02),
+                padding: const EdgeInsets.only(top: 15),
               ),
               title: Stack(
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(
-                        top: screenHeight(context) * 0.035,
-                      ),
+                      padding: const EdgeInsets.only(top: 20),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -220,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white,
                                     fontFamily:
                                         GoogleFonts.jetBrainsMono().fontFamily,
-                                    fontSize: screenWidth(context) * 0.012,
+                                    fontSize: 20,
                                   ),
                                 ),
                                 Padding(
@@ -230,7 +217,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Icon(
                                     Icons.arrow_drop_down, // Dropdown icon
                                     color: Colors.white,
-                                    size: screenWidth(context) * 0.015,
+                                    size: 25,
                                   ),
                                 ),
                               ],
@@ -290,27 +277,25 @@ class _HomePageState extends State<HomePage> {
                           .min, // Keeps Row tight around its content
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(
-                              top: screenHeight(context) * 0.02,
-                              bottom: screenHeight(context) * 0.02),
+                          padding: const EdgeInsets.only(top: 20),
                           child: Image.asset(
                             'lib/images/logo_dark.png',
-                            width: screenWidth(context) * 0.08,
-                            height: screenHeight(context) * 0.06,
+                            width: 40,
+                            height: 40,
                           ),
                         ),
-                        // SizedBox(
-                        //     width: screenWidth(context) *
-                        //         0.0), // Optional: add space between logo and text
+                        SizedBox(
+                            width:
+                                10), // Optional: add space between logo and text
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: Text(
                             'ClassyCode',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: screenWidth(context) * 0.015,
                               fontFamily:
                                   GoogleFonts.jetBrainsMono().fontFamily,
+                              fontSize: 20,
                             ),
                           ),
                         ),
@@ -332,17 +317,11 @@ class _HomePageState extends State<HomePage> {
                     });
                   },
                   child: PopupMenuButton<String>(
-                    icon: Padding(
-                      padding: EdgeInsets.only(
-                        top: screenHeight(context) * 0.005,
-                      ),
-                      child: Icon(Icons.account_circle,
-                          color: _isHovering || _isHoveringLogout
-                              ? Colors.grey
-                              : Colors.white),
-                    ),
-                    //iconSize: 30,
-                    iconSize: screenWidth(context) * 0.025,
+                    icon: Icon(Icons.account_circle,
+                        color: _isHovering || _isHoveringLogout
+                            ? Colors.grey
+                            : Colors.white),
+                    iconSize: 30,
                     color: Colors.grey[850],
                     onSelected: (String result) {
                       if (result == 'logout') {
@@ -362,7 +341,7 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.white,
                               fontFamily:
                                   GoogleFonts.jetBrainsMono().fontFamily,
-                              fontSize: screenWidth(context) * 0.01,
+                              fontSize: 15,
                             ),
                           ),
                         ),
@@ -378,7 +357,7 @@ class _HomePageState extends State<HomePage> {
                                 : Colors
                                     .grey, // Change color when hovered or clicked
                             fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                            fontSize: screenWidth(context) * 0.01,
+                            fontSize: 15,
                           ),
                         ),
                       ),
@@ -387,10 +366,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            // Container(
-            //   height: 10.0, // Adjust the height of the bottom margin as needed
-            //   color: Colors.white, // Same color as the AppBar to blend in
-            // ),
+            Container(
+              height: 10.0, // Adjust the height of the bottom margin as needed
+              color: Colors.black, // Same color as the AppBar to blend in
+            ),
           ],
         ),
       ),
@@ -399,117 +378,110 @@ class _HomePageState extends State<HomePage> {
           Row(
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          //left: 17.0,
-                          left: screenWidth(context) * 0.01,
-                          top: screenHeight(context) * 0.02,
-                          //top: 20.0,
-                        ),
-                        child: Text(
-                          'Class Diagram',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                            fontSize: screenWidth(context) * 0.013,
-                          ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 17.0,
+                        top: 20.0,
+                      ),
+                      child: Text(
+                        'Class Diagram',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                          fontSize: 20,
                         ),
                       ),
-                      SizedBox(
-                        height: screenHeight(context) * 0.01,
+                    ),
+                    SizedBox(height: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 17.0,
+                        right: 15.0,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: screenWidth(context) * 0.01,
-                        ),
-                        child: SizedBox(
-                          //height: 650,
-                          height: screenHeight(context) * 0.7,
-                          width: screenWidth(context) * 0.9,
-                          //width: 900,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                //width: double.infinity,
-                                width: screenWidth(context) * 0.65,
-                                height: screenHeight(context) * 0.8,
-                                //height: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF202124),
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height *
+                            0.7, // Responsive height
+                        width: MediaQuery.of(context).size.width *
+                            0.8, // Responsive width
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color(0xFF202124),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            if (_selectedFile != null)
+                              Positioned.fill(
+                                child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              ),
-                              if (_selectedFile != null)
-                                Positioned.fill(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: InteractiveViewer(
-                                      minScale: 0.5,
-                                      maxScale: 10.0,
-                                      child: Image.file(
-                                        _selectedFile!,
-                                        fit: BoxFit.contain,
-                                      ),
+                                  child: InteractiveViewer(
+                                    minScale: 0.5,
+                                    maxScale: 10.0,
+                                    child: Image.file(
+                                      _selectedFile!,
+                                      fit: BoxFit.contain,
                                     ),
                                   ),
                                 ),
-                              Positioned(
-                                bottom: _selectedFile != null
-                                    ? screenHeight(context) * 0.01
-                                    : null,
-                                right: _selectedFile != null
-                                    ? screenWidth(context) * 0.01
-                                    : null,
-                                child: Material(
-                                  color: Color(0xFF31363F),
+                              ),
+                            Positioned(
+                              bottom: _selectedFile != null ? 20.0 : null,
+                              right: _selectedFile != null ? 20.0 : null,
+                              child: Material(
+                                color: Color(0xFF31363F),
+                                borderRadius: BorderRadius.circular(50),
+                                child: InkWell(
                                   borderRadius: BorderRadius.circular(50),
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(50),
-                                    onTap: _pickFile,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(
-                                          screenWidth(context) * 0.01),
-                                      child: Icon(
-                                        Icons.add,
-                                        size: screenWidth(context) * 0.03,
-                                        color: Color(0xFFB8DBD9),
-                                      ),
+                                  onTap: _pickFile,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 60,
+                                      color: Color(0xFFB8DBD9),
                                     ),
                                   ),
                                 ),
                               ),
-                              if (_selectedFile == null && !_isUploading)
-                                Positioned(
-                                  //top: 420.0,
-                                  top: screenHeight(context) * 0.47,
-                                  child: Text(
-                                    'Upload Class Diagram',
-                                    style: TextStyle(
-                                      fontSize: screenWidth(context) * 0.01,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFFB8DBD9),
-                                      fontFamily: GoogleFonts.jetBrainsMono()
-                                          .fontFamily,
-                                    ),
+                            ),
+                            if (_selectedFile == null && !_isUploading)
+                              Positioned(
+                                top: MediaQuery.of(context).size.height * 0.42,
+                                child: Text(
+                                  'Upload Class Diagram',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFFB8DBD9),
+                                    fontFamily:
+                                        GoogleFonts.jetBrainsMono().fontFamily,
                                   ),
                                 ),
-                            ],
-                          ),
+                              ),
+                          ],
                         ),
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: GenerateButton(onPressed: generate),
-                          ),
-                          SizedBox(width: 10),
-                          DropdownButton<String>(
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GenerateButton(onPressed: generate),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.001,
+                        ),
+                        SizedBox(
+                          width: 200,
+                          child: DropdownButton<String>(
                             value: selectedLanguage,
+                            isExpanded: true,
                             dropdownColor:
                                 const Color.fromARGB(255, 28, 28, 28),
                             items: languages
@@ -529,10 +501,10 @@ class _HomePageState extends State<HomePage> {
                             onChanged: (value) =>
                                 setState(() => selectedLanguage = value!),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               VerticalDivider(

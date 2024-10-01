@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/subsystems/output_management/save_status.dart';
 import 'package:flutter/material.dart';
@@ -20,16 +18,10 @@ class GeneratedCodeSection extends StatefulWidget {
 }
 
 class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
-  double screenHeight(BuildContext context) {
-    return MediaQuery.of(context).size.height;
-  }
-
-  double screenWidth(BuildContext context) {
-    return MediaQuery.of(context).size.width;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -40,146 +32,175 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
             style: TextStyle(
               color: Colors.white,
               fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-              fontSize: screenWidth(context) * 0.013,
+              fontSize: 20,
             ),
           ),
-          SizedBox(
-            height: screenHeight(context) * 0.01,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  // for insights ni
-                  //height: 160,
-                  height: screenHeight(context) * 0.2,
-                  width: screenWidth(context) * 0.3,
-                  //width: 445,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Color(0xFF202124),
-                        borderRadius: BorderRadius.circular(8.0)),
-                  ),
-                ),
-              ),
-              SizedBox(width: screenWidth(context) * 0.01),
-              Expanded(
-                child: Column(
+          SizedBox(height: 8.0),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // Adjust layout based on screen size
+              if (screenWidth > 800) {
+                // Wide layout for larger screens
+                return Row(
                   children: [
-                    SizedBox(
-                      // for insights ni
-                      //height: 75,
-                      height: screenHeight(context) * 0.09,
-                      width: double.infinity,
-                      //width: 272,
+                    Flexible(
+                      flex: 2,
                       child: Container(
+                        height: 160,
                         decoration: BoxDecoration(
-                            color: Color(0xFF202124),
-                            borderRadius: BorderRadius.circular(8.0)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: screenHeight(context) * 0.015,
-                    ),
-                    SizedBox(
-                      // for insights ni
-                      height: screenHeight(context) * 0.09,
-                      //width: 272,
-                      width: double.infinity,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Color(0xFF202124),
-                            borderRadius: BorderRadius.circular(8.0)),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: screenHeight(context) * 0.01),
-                child: Text(
-                  'Generated Code',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                    fontSize: screenWidth(context) * 0.013,
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: screenHeight(context) * 0.01),
-                    child: IconButton(
-                      icon: Icon(Icons.save, color: Colors.white),
-                      hoverColor: Colors.white10,
-                      iconSize: screenWidth(context) * 0.015,
-                      onPressed: () async {
-                        await saveCode(context, widget.generatedCode);
-                      }, // Implement code save functionality
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(
-            height: screenHeight(context) * 0.001, // space
-          ),
-          widget.generatedCode.isNotEmpty
-              ? Expanded(
-                  child: SingleChildScrollView(
-                    child: MarkdownViewer(
-                      widget.generatedCode,
-                      enableTaskList: true,
-                      enableSuperscript: false,
-                      enableSubscript: false,
-                      enableFootnote: false,
-                      enableImageSize: false,
-                      enableKbd: false,
-                      highlightBuilder: (text, language, infoString) {
-                        final prism = Prism(
-                          mouseCursor: SystemMouseCursors.text,
-                          style: PrismStyle.dark(),
-                        );
-                        return prism.render(text, language ?? 'plain');
-                      },
-                      styleSheet: MarkdownStyle(
-                        listItemMarkerTrailingSpace: 12,
-                        codeSpan: TextStyle(
-                          fontFamily: 'RobotoMono',
-                        ),
-                        codeBlock: TextStyle(
-                          color: Colors.white,
-                          fontSize: screenWidth(context) * 0.01,
-                          letterSpacing: -0.3,
-                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                        ),
-                        codeblockDecoration: BoxDecoration(
                           color: Color(0xFF202124),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
                     ),
-                  ),
-                )
-              : SingleChildScrollView(
-                  child: SizedBox(
-                    //height: 430,
-                    height: screenHeight(context) * 0.44,
-                    width: screenWidth(context) * 0.9,
-                    //width: 900,
-                    child: Container(
+                    SizedBox(width: 10),
+                    Flexible(
+                      flex: 1,
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 75,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF202124),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Container(
+                            height: 75,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF202124),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                // Stacked layout for smaller screens
+                return Column(
+                  children: [
+                    Container(
+                      height: 160,
                       decoration: BoxDecoration(
                         color: Color(0xFF202124),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
+                    SizedBox(height: 10),
+                    Container(
+                      height: 75,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF202124),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      height: 75,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF202124),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+          SizedBox(height: 8.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Generated Code',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                  fontSize: 20,
+                ),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.save, color: Colors.white),
+                    hoverColor: Colors.white10,
+                    onPressed: () async {
+                      await saveCode(context, widget.generatedCode);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 8.0),
+          widget.generatedCode.isNotEmpty
+              ? Flexible(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints:
+                              BoxConstraints(minHeight: constraints.maxHeight),
+                          child: MarkdownViewer(
+                            widget.generatedCode,
+                            enableTaskList: true,
+                            enableSuperscript: false,
+                            enableSubscript: false,
+                            enableFootnote: false,
+                            enableImageSize: false,
+                            enableKbd: false,
+                            highlightBuilder: (text, language, infoString) {
+                              final prism = Prism(
+                                mouseCursor: SystemMouseCursors.text,
+                                style: PrismStyle.dark(),
+                              );
+                              return prism.render(text, language ?? 'plain');
+                            },
+                            styleSheet: MarkdownStyle(
+                              listItemMarkerTrailingSpace: 12,
+                              codeSpan: TextStyle(
+                                fontFamily: 'RobotoMono',
+                              ),
+                              codeBlock: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                letterSpacing: -0.3,
+                                fontFamily:
+                                    GoogleFonts.jetBrainsMono().fontFamily,
+                              ),
+                              codeblockDecoration: BoxDecoration(
+                                color: Color(0xFF202124),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )
+              : Flexible(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
+                          child: Container(
+                            height: 430,
+                            width: constraints.maxWidth,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF202124),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
         ],
