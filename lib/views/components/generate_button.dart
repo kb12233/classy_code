@@ -9,7 +9,7 @@ class GenerateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(30.0),
       child: ElevatedButton(
         onPressed: onPressed,
         child: Text(
@@ -24,7 +24,6 @@ class GenerateButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(150, 50),
           backgroundColor: Color(0xFFB8DBD9),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
         ),
       ),
     );
