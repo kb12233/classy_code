@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:classy_code/views/components/loading_overlay.dart';
 import 'package:classy_code/views/components/generate_button.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -132,15 +131,15 @@ class _HomePageState extends State<HomePage> {
 
       final codeContent = match.group(2)!;
 
-      InsightsData insightsData =
-          await converter.extractInsights(_selectedFile!);
-
+      InsightsData insightsData = await converter.extractInsights(_selectedFile!);
+      
       try {
         String? result = await HistoryController.createHistoryItem(
             FirebaseAuth.instance.currentUser!.uid,
             codeContent,
             _selectedFile,
-            insightsData);
+            insightsData
+        );
       } on Exception catch (e) {
         print('Error creating history item: $e');
       }
@@ -208,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white,
                                     fontFamily:
                                         GoogleFonts.jetBrainsMono().fontFamily,
-                                    fontSize: 20,
+                                    fontSize: 25,
                                   ),
                                 ),
                                 Padding(
@@ -281,8 +280,8 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.only(top: 20),
                           child: Image.asset(
                             'lib/images/logo_dark.png',
-                            width: 40,
-                            height: 40,
+                            width: 50,
+                            height: 50,
                           ),
                         ),
                         SizedBox(
@@ -296,7 +295,6 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.white,
                               fontFamily:
                                   GoogleFonts.jetBrainsMono().fontFamily,
-                              fontSize: 20,
                             ),
                           ),
                         ),
@@ -379,110 +377,107 @@ class _HomePageState extends State<HomePage> {
           Row(
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 17.0,
-                        top: 20.0,
-                      ),
-                      child: Text(
-                        'Class Diagram',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                          fontSize: 20,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 17.0,
+                          top: 20.0,
+                        ),
+                        child: Text(
+                          'Class Diagram',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 17.0,
-                        right: 15.0,
-                      ),
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height *
-                            0.7, // Responsive height
-                        width: MediaQuery.of(context).size.width *
-                            0.8, // Responsive width
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF202124),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            if (_selectedFile != null)
-                              Positioned.fill(
-                                child: ClipRRect(
+                      SizedBox(
+                          height:
+                              11.0 // Add some spacing between the header and the content
+                          ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 17.0,
+                          right: 15.0,
+                        ),
+                        child: SizedBox(
+                          height: 650,
+                          width: 900,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF202124),
                                   borderRadius: BorderRadius.circular(8.0),
-                                  child: InteractiveViewer(
-                                    minScale: 0.5,
-                                    maxScale: 10.0,
-                                    child: Image.file(
-                                      _selectedFile!,
-                                      fit: BoxFit.contain,
+                                ),
+                              ),
+                              if (_selectedFile != null)
+                                Positioned.fill(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: InteractiveViewer(
+                                      minScale: 0.5,
+                                      maxScale: 10.0,
+                                      child: Image.file(
+                                        _selectedFile!,
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            Positioned(
-                              bottom: _selectedFile != null ? 20.0 : null,
-                              right: _selectedFile != null ? 20.0 : null,
-                              child: Material(
-                                color: Color(0xFF31363F),
-                                borderRadius: BorderRadius.circular(50),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(50),
-                                  onTap: _pickFile,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Icon(
-                                      Icons.add,
-                                      size: 60,
-                                      color: Color(0xFFB8DBD9),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (_selectedFile == null && !_isUploading)
                               Positioned(
-                                top: MediaQuery.of(context).size.height * 0.42,
-                                child: Text(
-                                  'Upload Class Diagram',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFB8DBD9),
-                                    fontFamily:
-                                        GoogleFonts.jetBrainsMono().fontFamily,
+                                bottom: _selectedFile != null ? 20.0 : null,
+                                right: _selectedFile != null ? 20.0 : null,
+                                child: Material(
+                                  color: Color(0xFF31363F),
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(50),
+                                    onTap: _pickFile,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 60,
+                                        color: Color(0xFFB8DBD9),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                          ],
+                              if (_selectedFile == null && !_isUploading)
+                                Positioned(
+                                  top: 420.0,
+                                  child: Text(
+                                    'Upload Class Diagram',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFFB8DBD9),
+                                      fontFamily: GoogleFonts.jetBrainsMono()
+                                          .fontFamily,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GenerateButton(onPressed: generate),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.001,
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: DropdownButton<String>(
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GenerateButton(onPressed: generate),
+                          ),
+                          SizedBox(width: 10),
+                          DropdownButton<String>(
                             value: selectedLanguage,
-                            isExpanded: true,
                             dropdownColor:
                                 const Color.fromARGB(255, 28, 28, 28),
                             items: languages
@@ -502,10 +497,10 @@ class _HomePageState extends State<HomePage> {
                             onChanged: (value) =>
                                 setState(() => selectedLanguage = value!),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               VerticalDivider(
