@@ -20,6 +20,8 @@ class GeneratedCodeSection extends StatefulWidget {
 class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -33,48 +35,82 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
               fontSize: 20,
             ),
           ),
-          SizedBox(height: 8.0 // space
-              ),
-          Row(
-            children: [
-              SizedBox(
-                // for insights ni
-                height: 160,
-                width: 445,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Color(0xFF202124),
-                      borderRadius: BorderRadius.circular(8.0)),
-                ),
-              ),
-              SizedBox(width: 10),
-              Column(
-                children: [
-                  SizedBox(
-                    // for insights ni
-                    height: 75,
-                    width: 272,
-                    child: Container(
-                      decoration: BoxDecoration(
+          SizedBox(height: 8.0),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // Adjust layout based on screen size
+              if (screenWidth > 800) {
+                // Wide layout for larger screens
+                return Row(
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: Container(
+                        height: 160,
+                        decoration: BoxDecoration(
                           color: Color(0xFF202124),
-                          borderRadius: BorderRadius.circular(8.0)),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    // for insights ni
-                    height: 75,
-                    width: 272,
-                    child: Container(
+                    SizedBox(width: 10),
+                    Flexible(
+                      flex: 1,
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 75,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF202124),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Container(
+                            height: 75,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF202124),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                // Stacked layout for smaller screens
+                return Column(
+                  children: [
+                    Container(
+                      height: 160,
                       decoration: BoxDecoration(
-                          color: Color(0xFF202124),
-                          borderRadius: BorderRadius.circular(8.0)),
+                        color: Color(0xFF202124),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                    SizedBox(height: 10),
+                    Container(
+                      height: 75,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF202124),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      height: 75,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF202124),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
           ),
+          SizedBox(height: 8.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -93,60 +129,78 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                     hoverColor: Colors.white10,
                     onPressed: () async {
                       await saveCode(context, widget.generatedCode);
-                    }, // Implement code save functionality
+                    },
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(height: 8.0 // space
-              ),
+          SizedBox(height: 8.0),
           widget.generatedCode.isNotEmpty
-              ? Expanded(
-                  child: SingleChildScrollView(
-                    child: MarkdownViewer(
-                      widget.generatedCode,
-                      enableTaskList: true,
-                      enableSuperscript: false,
-                      enableSubscript: false,
-                      enableFootnote: false,
-                      enableImageSize: false,
-                      enableKbd: false,
-                      highlightBuilder: (text, language, infoString) {
-                        final prism = Prism(
-                          mouseCursor: SystemMouseCursors.text,
-                          style: PrismStyle.dark(),
-                        );
-                        return prism.render(text, language ?? 'plain');
-                      },
-                      styleSheet: MarkdownStyle(
-                        listItemMarkerTrailingSpace: 12,
-                        codeSpan: TextStyle(
-                          fontFamily: 'RobotoMono',
+              ? Flexible(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints:
+                              BoxConstraints(minHeight: constraints.maxHeight),
+                          child: MarkdownViewer(
+                            widget.generatedCode,
+                            enableTaskList: true,
+                            enableSuperscript: false,
+                            enableSubscript: false,
+                            enableFootnote: false,
+                            enableImageSize: false,
+                            enableKbd: false,
+                            highlightBuilder: (text, language, infoString) {
+                              final prism = Prism(
+                                mouseCursor: SystemMouseCursors.text,
+                                style: PrismStyle.dark(),
+                              );
+                              return prism.render(text, language ?? 'plain');
+                            },
+                            styleSheet: MarkdownStyle(
+                              listItemMarkerTrailingSpace: 12,
+                              codeSpan: TextStyle(
+                                fontFamily: 'RobotoMono',
+                              ),
+                              codeBlock: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                letterSpacing: -0.3,
+                                fontFamily:
+                                    GoogleFonts.jetBrainsMono().fontFamily,
+                              ),
+                              codeblockDecoration: BoxDecoration(
+                                color: Color(0xFF202124),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
                         ),
-                        codeBlock: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          letterSpacing: -0.3,
-                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                        ),
-                        codeblockDecoration: BoxDecoration(
-                          color: Color(0xFF202124),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 )
-              : SingleChildScrollView(
-                  child: SizedBox(
-                    height: 430,
-                    width: 900,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xFF202124),
-                          borderRadius: BorderRadius.circular(8.0)),
-                    ),
+              : Flexible(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
+                          child: Container(
+                            height: 430,
+                            width: constraints.maxWidth,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF202124),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
         ],
