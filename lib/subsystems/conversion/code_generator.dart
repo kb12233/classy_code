@@ -31,6 +31,7 @@ class CodeGenerator {
     ]);
 
     print(response.text);
+    print('from code_generator.dart');
 
     return response.text;
   }

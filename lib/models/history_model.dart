@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:classy_code/models/insight_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/material.dart';
 
 class HistoryModel {
   final String historyID;
@@ -88,6 +89,71 @@ class HistoryModel {
   }
 
   // TODO implement getHistoryList
+  // static List<HistoryModel> getHistoryList(String userID) {
+  //   Stream<QuerySnapshot> history = FirebaseFirestore.instance
+  //       .collection('history')
+  //       .where('userID', isEqualTo: userID)
+  //       .orderBy('dateTime', descending: true)
+  //       .snapshots();
+
+  //   List<HistoryModel> historyList = [];
+  //   history.listen((snapshot) {
+  //     for (var doc in snapshot.docs) {
+  //       historyList.add(HistoryModel(
+  //         historyID: doc.id,
+  //         userID: doc['userID'],
+  //         code: doc['code'],
+  //         dateTime: (doc['dateTime'] as Timestamp).toDate(),
+  //         photoURL: doc['photoURL'],
+  //         totalClasses: doc['totalClasses'],
+  //         totalRelationships: doc['totalRelationships'],
+  //         typesOfRelationships: Map<String, double>.from(doc['typesOfRelationships'])
+  //       ));
+  //     }
+  //   });
+
+  //   return historyList;
+  // }
+  static Stream<QuerySnapshot> getHistoryList(String userID) {
+    Stream<QuerySnapshot> history = FirebaseFirestore.instance
+        .collection('history')
+        .where('userID', isEqualTo: userID)
+        .orderBy('dateTime', descending: true)
+        .snapshots();
+
+    return history;
+  }
+
+  static List<HistoryModel> mapHistoryList(Stream<QuerySnapshot> snapshot) {
+    List<HistoryModel> historyList = [];
+    
+    snapshot.listen((snapshot) {
+      for (var doc in snapshot.docs) {
+        historyList.add(HistoryModel(
+          historyID: doc.id,
+          userID: doc['userID'],
+          code: doc['code'],
+          dateTime: (doc['dateTime'] as Timestamp).toDate(),
+          photoURL: doc['photoURL'],
+          totalClasses: doc['totalClasses'],
+          totalRelationships: doc['totalRelationships'],
+          typesOfRelationships: Map<String, double>.from(doc['typesOfRelationships'])
+        ));
+      }
+    });
+
+    return historyList;
+  }
+
+  static void triggerHistoryListUpdate(String userID) {
+    var history = getHistoryList(userID);
+    var historyList = mapHistoryList(history);
+    
+    for (var historyItem in historyList) {
+      debugPrint(historyItem.photoURL);
+    }
+
+  }
 
   // TODO implement getHistoryItem
 
