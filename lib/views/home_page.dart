@@ -126,10 +126,47 @@ class _HomePageState extends State<HomePage> {
         return;
       }
 
-      final language = match.group(1)!;
+      String language = match.group(1)!;
+      language = language.trim();
       print(language);
 
-      final codeContent = match.group(2)!;
+      String codeContent = code!;
+      List<String> codeLines = codeContent.split('\n');
+
+      if (codeLines.length > 2) {
+        codeLines.removeAt(0);
+        codeLines.removeAt(codeLines.length - 1);
+      }
+
+      codeContent = codeLines.join('\n');
+
+      print('printing from generate: ');
+      print(codeContent);
+
+      String extension = '';
+
+      switch (language) {
+        case 'python':
+          extension = 'py';
+        case 'dart':
+          extension = 'dart';
+        case 'javascript':
+          extension = 'js';
+        case 'java':
+          extension = 'java';
+        // case 'csharp':
+        //   return 'cs';
+        // Add more languages and their extensions as needed
+        default:
+          extension = 'txt';
+      }
+
+      print('Extension: $extension');
+
+      String codeFileName = 'code.$extension';
+      File codeFile = File(codeFileName);
+      await codeFile.writeAsString(codeContent);
+      print('File created: ${codeFile.path}');
 
       InsightsData insightsData =
           await converter.extractInsights(_selectedFile!);
@@ -137,11 +174,16 @@ class _HomePageState extends State<HomePage> {
       try {
         String? result = await HistoryController.createHistoryItem(
             FirebaseAuth.instance.currentUser!.uid,
-            codeContent,
+            codeFile,
             _selectedFile,
-            insightsData);
+            insightsData,
+            language);
       } on Exception catch (e) {
         print('Error creating history item: $e');
+      }
+
+      if (await codeFile.exists()) {
+        await codeFile.delete();
       }
 
       setState(() {
