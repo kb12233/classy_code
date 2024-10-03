@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 class HistoryController {
   HistoryModel? history;
 
-  static Future<String?> createHistoryItem(String userID, String code, File? classDiagramImage, InsightsData insightsData) async {
-    return await HistoryModel.createHistoryItem(userID, code, classDiagramImage, insightsData);
+  static Future<String?> createHistoryItem(String userID, File? code, File? classDiagramImage, InsightsData insightsData, String language) async {
+    return await HistoryModel.createHistoryItem(userID, code, classDiagramImage, insightsData, language);
   }
 }
