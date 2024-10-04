@@ -2,7 +2,7 @@
 class InsightsData {
   final int totalClasses;
   final int totalRelationships;
-  final Map<String, double> typesOfRelationships;
+  final List<String> typesOfRelationships;
 
   InsightsData({
     required this.totalClasses,

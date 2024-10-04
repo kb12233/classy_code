@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   String generatedCode = "";
   int totalClasses = 0;
   int totalRelationships = 0;
-  Map<String, double> typesOfRelationships = {};
+  List<String> typesOfRelationships = [];
   bool _isUploading = false;
   bool _isGenerating = false;
   String userEmail = '';

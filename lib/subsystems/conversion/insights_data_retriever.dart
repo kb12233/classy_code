@@ -59,39 +59,8 @@ class InsightsDataRetriever {
     return int.parse(response.text ?? '0');
   }
 
-  static Future<Map<String, double>> getTypesOfRelationships(
+  static Future<List<String>> getTypesOfRelationships(
       File? classdiagramImage) async {
-    List<String> relationshipTypes = [
-      'association',
-      'aggregation',
-      'composition',
-      'inheritance',
-      'realization',
-      'dependency'
-    ];
-    Map<String, double> typesOfRelationships = {
-      'association': 0,
-      'aggregation': 0,
-      'composition': 0,
-      'inheritance': 0,
-      'realization': 0,
-      'dependency': 0
-    };
-
-    Map<String, String> relationshipDescriptions = {
-      'association':
-          'Represented by a solid line between two classes. It shows a general relationship where one class can use or interact with another class.',
-      'aggregation':
-          'Represented by a line with a hollow diamond at the end pointing towards the whole class. It represents a "has-a" relationship where one class contains or is a part of another class, but both can exist independently.',
-      'composition':
-          'Represented by a line with a filled diamond at the end pointing towards the whole class. It also represents a "has-a" relationship, but here the contained class cannot exist independently of the whole.',
-      'inheritance':
-          'Represented by lines with open arrowheads pointing towards the superclass. It shows that a subclass inherits the properties and behaviors of a superclass.',
-      'realization':
-          'Represented by a dashed line with an open arrowhead pointing towards the interface. It indicates that a class implements an interface.',
-      'dependency':
-          'Represented by a dashed line with an arrow pointing towards the class being depended on. It shows that one class depends on another class, usually for the execution of some operation.'
-    };
 
     String? apiKey = dotenv.env['API_KEY'];
     if (apiKey == null) {
@@ -106,43 +75,45 @@ class InsightsDataRetriever {
 
     final image = await (File(classdiagramImage!.path).readAsBytes());
 
-    for (int i = 0; i < relationshipTypes.length; i++) {
-      final prompt = TextPart('''
-          How many ${relationshipTypes[i]} relationship lines (${relationshipDescriptions[relationshipTypes[i]]}) are there in the given class diagram image? Only provide the number.
-          ''');
-      final imagePart = [DataPart('image/jpeg', image)];
+    final prompt = TextPart('''
+      Analyze the UML class diagram in the provided image. Detect the types of relationships present among the classes. The types of relationships you should detect include:
 
-      final response = await model.generateContent([
-        Content.multi([prompt, ...imagePart])
-      ]);
+      - Association
+      - Aggregation
+      - Composition
+      - Dependency
+      - Inheritance
+      - Realization
 
-      print(response.text);
-      typesOfRelationships[relationshipTypes[i]] =
-          double.parse(response.text ?? '0');
-    }
+      Based on your analysis of the diagram, return a list of all the relationship types present, using the following format:
 
-    return typesOfRelationships;
+      [relationship_type_1, relationship_type_2, ...]
+
+      For example, if the diagram contains both inheritance and association relationships, the response should be: [association, inheritance]. Please ensure that the list is accurate and includes only the relationship types detected in the diagram.
+    ''');
+    final imagePart = [DataPart('image/jpeg', image)];
+    final response = await model.generateContent([
+      Content.multi([prompt, ...imagePart])
+    ]);
+    print(response.text);
+
+    String cleanedResponse = response.text!.replaceAll(RegExp(r'[\[\]]'), '').trim();
+
+    List<String> relationshipTypes = cleanedResponse
+      .split(',')
+      .map((type) => type.trim())
+      .toList();
+  
+    print(relationshipTypes);
+
+    return relationshipTypes;
   }
 
   static Future<InsightsData> getInsights(File? classdiagramImage) async {
     int totalClasses = await getTotalClasses(classdiagramImage);
     int totalRelationships = await getTotalRelationships(classdiagramImage);
-    Map<String, double> typesOfRelationships =
+    List<String> typesOfRelationships =
         await getTypesOfRelationships(classdiagramImage);
-    
-    List<String> relationshipTypes = [
-      'association',
-      'aggregation',
-      'composition',
-      'inheritance',
-      'realization',
-      'dependency'
-    ];
-
-    for (int i = 0; i < relationshipTypes.length; i++) {
-      typesOfRelationships[relationshipTypes[i]] =
-          typesOfRelationships[relationshipTypes[i]]! / totalRelationships * 100;
-    }
     
     InsightsData insightsData = InsightsData(
       totalClasses: totalClasses,
