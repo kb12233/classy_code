@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:io';
 
 import 'package:classy_code/controllers/history_controller.dart';
@@ -8,6 +10,7 @@ import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/views/components/generate_button.dart';
 import 'package:classy_code/views/components/generated_code_section.dart';
 import 'package:classy_code/views/components/loading_overlay.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,6 +36,19 @@ class _HomePageState extends State<HomePage> {
   String userEmail = '';
   bool _isHovering = false;
   bool _isHoveringLogout = false;
+  final List<String> historyItems = [
+    'ashley moriah',
+    'mikka ellazxczxcZxczxczxc Zxc ZxdvasdvSzdvs',
+    'kb',
+    'ashley moriah',
+    'mikka ella',
+    'kb',
+    'ashley moriah',
+    'mikka ella',
+    'kb',
+  ];
+
+  String? selectedValue;
 
   @override
   void initState() {
@@ -233,17 +249,20 @@ class _HomePageState extends State<HomePage> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: 15),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // PopupMenuButton for History
-                          PopupMenuButton<String>(
-                            icon: Row(
-                              mainAxisSize: MainAxisSize
-                                  .min, // Keep the row tight around its content
-                              children: [
-                                Text(
+                          Container(
+                            width: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              color: Color(0xFF202124),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2<String>(
+                                isExpanded: true,
+                                hint: Text(
                                   'History',
                                   style: TextStyle(
                                     color: Colors.white,
@@ -252,61 +271,80 @@ class _HomePageState extends State<HomePage> {
                                     fontSize: 20,
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left:
-                                          4.0), // Add space between text and icon
-                                  child: Icon(
-                                    Icons.arrow_drop_down, // Dropdown icon
-                                    color: Colors.white,
-                                    size: 25,
-                                  ),
+                                items: historyItems
+                                    .map((String value) =>
+                                        DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily:
+                                                  GoogleFonts.jetBrainsMono()
+                                                      .fontFamily,
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                value: selectedValue,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    //selectedValue = value;
+                                  });
+                                },
+                                dropdownStyleData: DropdownStyleData(
+                                    maxHeight: 300,
+                                    width: 300,
+                                    offset: Offset(0, -8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[850],
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    )),
+                                buttonStyleData: ButtonStyleData(
+                                  padding: EdgeInsets.only(left: 15, right: 15),
                                 ),
-                              ],
+                              ),
                             ),
-                            iconSize: 30,
-                            color: Colors.grey[850],
-                            onSelected: (String result) {
-                              // Define what happens when a history item is selected
-                            },
-                            itemBuilder: (BuildContext context) =>
-                                <PopupMenuEntry<String>>[
-                              // Example history items
-                              PopupMenuItem<String>(
-                                value: 'History Item 1',
-                                child: Text(
-                                  'History Item 1',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily:
-                                        GoogleFonts.jetBrainsMono().fontFamily,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem<String>(
-                                value: 'History Item 2',
-                                child: Text(
-                                  'History Item 2',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily:
-                                        GoogleFonts.jetBrainsMono().fontFamily,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem<String>(
-                                value: 'History Item 3',
-                                child: Text(
-                                  'History Item 3',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily:
-                                        GoogleFonts.jetBrainsMono().fontFamily,
-                                  ),
-                                ),
-                              ),
-                            ],
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 15.0, left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 150,
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              print('hello');
+                            },
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Color(0xFF202124)),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              elevation: MaterialStateProperty.all(0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 8, bottom: 8, left: 1, right: 1),
+                              child: Icon(
+                                Icons.restart_alt,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -319,25 +357,23 @@ class _HomePageState extends State<HomePage> {
                           .min, // Keeps Row tight around its content
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: 10),
                           child: Image.asset(
                             'lib/images/logo_dark.png',
-                            width: 40,
-                            height: 40,
+                            width: 50,
+                            height: 50,
                           ),
                         ),
-                        SizedBox(
-                            width:
-                                10), // Optional: add space between logo and text
+                        SizedBox(width: 10),
                         Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: 15),
                           child: Text(
                             'ClassyCode',
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily:
                                   GoogleFonts.jetBrainsMono().fontFamily,
-                              fontSize: 20,
+                              fontSize: 25,
                             ),
                           ),
                         ),
@@ -358,52 +394,58 @@ class _HomePageState extends State<HomePage> {
                       _isHoveringLogout = false;
                     });
                   },
-                  child: PopupMenuButton<String>(
-                    icon: Icon(Icons.account_circle,
-                        color: _isHovering || _isHoveringLogout
-                            ? Colors.grey
-                            : Colors.white),
-                    iconSize: 30,
-                    color: Colors.grey[850],
-                    onSelected: (String result) {
-                      if (result == 'logout') {
-                        FirebaseAuth.instance.signOut();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<String>>[
-                      PopupMenuItem<String>(
-                        value:
-                            'user_email', // Changed value for the email entry
-                        child: ListTile(
-                          title: Text(
-                            userEmail,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: PopupMenuButton<String>(
+                      elevation: 0,
+                      offset: Offset(0, 60),
+                      icon: Icon(Icons.account_circle,
+                          color: _isHovering || _isHoveringLogout
+                              ? Colors.grey
+                              : Colors.white),
+                      iconSize: 45,
+                      color: Colors.grey[850],
+                      onSelected: (String result) {
+                        if (result == 'logout') {
+                          FirebaseAuth.instance.signOut();
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      itemBuilder: (BuildContext context) =>
+                          <PopupMenuEntry<String>>[
+                        PopupMenuItem<String>(
+                          value:
+                              'user_email', // Changed value for the email entry
+                          child: ListTile(
+                            title: Text(
+                              userEmail,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily:
+                                    GoogleFonts.jetBrainsMono().fontFamily,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'logout',
+                          mouseCursor: SystemMouseCursors.click,
+                          child: Text(
+                            'Logout',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: _isHoveringLogout
+                                  ? Colors.red
+                                  : Colors
+                                      .grey, // Change color when hovered or clicked
                               fontFamily:
                                   GoogleFonts.jetBrainsMono().fontFamily,
                               fontSize: 15,
                             ),
                           ),
                         ),
-                      ),
-                      PopupMenuItem<String>(
-                        value: 'logout',
-                        mouseCursor: SystemMouseCursors.click,
-                        child: Text(
-                          'Logout',
-                          style: TextStyle(
-                            color: _isHoveringLogout
-                                ? Colors.red
-                                : Colors
-                                    .grey, // Change color when hovered or clicked
-                            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
