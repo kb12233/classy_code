@@ -13,7 +13,7 @@ class HistoryModel {
   final String photoURL;
   final int totalClasses;
   final int totalRelationships;
-  final Map<String, double> typesOfRelationships;
+  final List<String> typesOfRelationships;
 
   HistoryModel(
       {this.historyID = '',
@@ -229,7 +229,7 @@ class HistoryModel {
             totalClasses: doc['totalClasses'],
             totalRelationships: doc['totalRelationships'],
             typesOfRelationships:
-                Map<String, double>.from(doc['typesOfRelationships'])));
+                List<String>.from(doc['typesOfRelationships'])));
       }
     });
 

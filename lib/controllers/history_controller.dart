@@ -11,4 +11,16 @@ class HistoryController {
   static Future<String?> createHistoryItem(String userID, File? code, File? classDiagramImage, InsightsData insightsData, String language) async {
     return await HistoryModel.createHistoryItem(userID, code, classDiagramImage, insightsData, language);
   }
+
+  static Stream<QuerySnapshot> getHistoryList(String userID) {
+    return HistoryModel.getHistoryList(userID);
+  }
+
+  static Future<void> deleteHistoryItem(String historyID) async {
+    return await HistoryModel.deleteHistoryItem(historyID);
+  }
+
+  static Future<DocumentSnapshot?> getHistoryItem(String historyID) {
+    return HistoryModel.getHistoryItem(historyID);
+  }
 }
