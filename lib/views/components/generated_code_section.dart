@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/subsystems/output_management/save_status.dart';
+import 'package:classy_code/views/components/classycode_custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prism/flutter_prism.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,25 +20,33 @@ class GeneratedCodeSection extends StatefulWidget {
   _GeneratedCodeSectionState createState() => _GeneratedCodeSectionState();
 }
 
+final bgColor = const Color(0xFF202124);
+
 class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
+  double screenHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height;
+  }
+
+  double screenDiagonal(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return sqrt(size.width * size.width + size.height * size.height);
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.only(right: 15.0, bottom: 15.0, top: 15.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Code Generation Insights',
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-              fontSize: 20,
-            ),
-          ),
-          SizedBox(height: 8.0),
+          customText(
+              text: 'Code Generation Insights',
+              fontSize: screenDiagonal(context) * 0.011,
+              isBold: false,
+              color: Colors.white),
+          SizedBox(height: screenHeight(context) * 0.008),
           LayoutBuilder(
             builder: (context, constraints) {
               // Adjust layout based on screen size
@@ -48,7 +59,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                       child: Container(
                         height: 160,
                         decoration: BoxDecoration(
-                          color: Color(0xFF202124),
+                          color: bgColor,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
@@ -61,7 +72,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                           Container(
                             height: 75,
                             decoration: BoxDecoration(
-                              color: Color(0xFF202124),
+                              color: bgColor,
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
@@ -69,7 +80,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                           Container(
                             height: 75,
                             decoration: BoxDecoration(
-                              color: Color(0xFF202124),
+                              color: bgColor,
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
@@ -85,7 +96,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                     Container(
                       height: 160,
                       decoration: BoxDecoration(
-                        color: Color(0xFF202124),
+                        color: bgColor,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -93,7 +104,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                     Container(
                       height: 75,
                       decoration: BoxDecoration(
-                        color: Color(0xFF202124),
+                        color: bgColor,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -101,7 +112,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                     Container(
                       height: 75,
                       decoration: BoxDecoration(
-                        color: Color(0xFF202124),
+                        color: bgColor,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -110,18 +121,23 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
               }
             },
           ),
-          SizedBox(height: 8.0),
+          SizedBox(height: screenHeight(context) * 0.008),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Generated Code',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                  fontSize: 20,
-                ),
-              ),
+              // Text(
+              //   'Generated Code',
+              //   style: TextStyle(
+              //     color: Colors.white,
+              //     fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+              //     fontSize: 20,
+              //   ),
+              // ),
+              customText(
+                  text: 'Generated Code',
+                  fontSize: screenDiagonal(context) * 0.011,
+                  isBold: false,
+                  color: Colors.white),
               Row(
                 children: [
                   IconButton(
@@ -135,7 +151,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
               ),
             ],
           ),
-          SizedBox(height: 8.0),
+          SizedBox(height: screenHeight(context) * 0.008),
           widget.generatedCode.isNotEmpty
               ? Flexible(
                   child: LayoutBuilder(
@@ -172,7 +188,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                                     GoogleFonts.jetBrainsMono().fontFamily,
                               ),
                               codeblockDecoration: BoxDecoration(
-                                color: Color(0xFF202124),
+                                color: bgColor,
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
@@ -194,7 +210,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                             height: 430,
                             width: constraints.maxWidth,
                             decoration: BoxDecoration(
-                              color: Color(0xFF202124),
+                              color: bgColor,
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),

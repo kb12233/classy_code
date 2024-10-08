@@ -7,13 +7,15 @@ import 'package:classy_code/img_code_converter.dart';
 import 'package:classy_code/input_manager.dart';
 import 'package:classy_code/models/insight_data.dart';
 import 'package:classy_code/output_manager.dart';
+import 'package:classy_code/views/components/appbar.dart';
+import 'package:classy_code/views/components/classycode_warning_banner.dart';
 import 'package:classy_code/views/components/generate_button.dart';
 import 'package:classy_code/views/components/generated_code_section.dart';
 import 'package:classy_code/views/components/loading_overlay.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:classy_code/views/components/select_laguage.dart';
+import 'package:classy_code/views/components/upload_classdiagram_section.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -36,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   String userEmail = '';
   bool _isHovering = false;
   bool _isHoveringLogout = false;
+  final languages = ['Select Language', 'Dart', 'Python', 'Java', 'JavaScript'];
   final List<String> historyItems = [
     'ashley moriah',
     'mikka ellazxczxcZxczxczxc Zxc ZxdvasdvSzdvs',
@@ -234,228 +237,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0), // Adjust the height as needed
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AppBar(
-              backgroundColor: Colors.black,
-              leading: Padding(
-                padding: const EdgeInsets.only(top: 15),
-              ),
-              title: Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 15),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 150,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              color: Color(0xFF202124),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton2<String>(
-                                isExpanded: true,
-                                hint: Text(
-                                  'History',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily:
-                                        GoogleFonts.jetBrainsMono().fontFamily,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                items: historyItems
-                                    .map((String value) =>
-                                        DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(
-                                            value,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily:
-                                                  GoogleFonts.jetBrainsMono()
-                                                      .fontFamily,
-                                            ),
-                                          ),
-                                        ))
-                                    .toList(),
-                                value: selectedValue,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    //selectedValue = value;
-                                  });
-                                },
-                                dropdownStyleData: DropdownStyleData(
-                                    maxHeight: 300,
-                                    width: 300,
-                                    offset: Offset(0, -8),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[850],
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    )),
-                                buttonStyleData: ButtonStyleData(
-                                  padding: EdgeInsets.only(left: 15, right: 15),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15.0, left: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: 150,
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              print('hello');
-                            },
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFF202124)),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              ),
-                              elevation: MaterialStateProperty.all(0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 8, bottom: 8, left: 1, right: 1),
-                              child: Icon(
-                                Icons.restart_alt,
-                                color: Colors.white,
-                                size: 30,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize
-                          .min, // Keeps Row tight around its content
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Image.asset(
-                            'lib/images/logo_dark.png',
-                            width: 50,
-                            height: 50,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Text(
-                            'ClassyCode',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily:
-                                  GoogleFonts.jetBrainsMono().fontFamily,
-                              fontSize: 25,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                MouseRegion(
-                  onEnter: (_) {
-                    setState(() {
-                      _isHoveringLogout = true;
-                    });
-                  },
-                  onExit: (_) {
-                    setState(() {
-                      _isHoveringLogout = false;
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: PopupMenuButton<String>(
-                      elevation: 0,
-                      offset: Offset(0, 60),
-                      icon: Icon(Icons.account_circle,
-                          color: _isHovering || _isHoveringLogout
-                              ? Colors.grey
-                              : Colors.white),
-                      iconSize: 45,
-                      color: Colors.grey[850],
-                      onSelected: (String result) {
-                        if (result == 'logout') {
-                          FirebaseAuth.instance.signOut();
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<String>>[
-                        PopupMenuItem<String>(
-                          value:
-                              'user_email', // Changed value for the email entry
-                          child: ListTile(
-                            title: Text(
-                              userEmail,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily:
-                                    GoogleFonts.jetBrainsMono().fontFamily,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ),
-                        ),
-                        PopupMenuItem<String>(
-                          value: 'logout',
-                          mouseCursor: SystemMouseCursors.click,
-                          child: Text(
-                            'Logout',
-                            style: TextStyle(
-                              color: _isHoveringLogout
-                                  ? Colors.red
-                                  : Colors
-                                      .grey, // Change color when hovered or clicked
-                              fontFamily:
-                                  GoogleFonts.jetBrainsMono().fontFamily,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              height: 10.0, // Adjust the height of the bottom margin as needed
-              color: Colors.black, // Same color as the AppBar to blend in
-            ),
-          ],
-        ),
+      appBar: CustomAppBar(
+        userEmail: userEmail,
+        isHovering: _isHovering,
+        isHoveringLogout: _isHoveringLogout,
+        setHoveringLogout: (bool hover) {
+          setState(() {
+            _isHoveringLogout = hover;
+          });
+        },
+        historyItems: historyItems,
+        selectedValue: selectedValue,
+        onChanged: (String? value) {
+          setState(() {
+            selectedValue = value;
+          });
+        },
       ),
       body: Stack(
         children: [
@@ -465,93 +262,10 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 17.0,
-                        top: 20.0,
-                      ),
-                      child: Text(
-                        'Class Diagram',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 17.0,
-                        right: 15.0,
-                      ),
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height *
-                            0.7, // Responsive height
-                        width: MediaQuery.of(context).size.width *
-                            0.8, // Responsive width
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF202124),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            if (_selectedFile != null)
-                              Positioned.fill(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: InteractiveViewer(
-                                    minScale: 0.5,
-                                    maxScale: 10.0,
-                                    child: Image.file(
-                                      _selectedFile!,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            Positioned(
-                              bottom: _selectedFile != null ? 20.0 : null,
-                              right: _selectedFile != null ? 20.0 : null,
-                              child: Material(
-                                color: Color(0xFF31363F),
-                                borderRadius: BorderRadius.circular(50),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(50),
-                                  onTap: _pickFile,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Icon(
-                                      Icons.add,
-                                      size: 60,
-                                      color: Color(0xFFB8DBD9),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (_selectedFile == null && !_isUploading)
-                              Positioned(
-                                top: MediaQuery.of(context).size.height * 0.42,
-                                child: Text(
-                                  'Upload Class Diagram',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFB8DBD9),
-                                    fontFamily:
-                                        GoogleFonts.jetBrainsMono().fontFamily,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
+                    UploadClassDiagramSection(
+                      selectedFile: _selectedFile,
+                      isUploading: _isUploading,
+                      pickFile: _pickFile,
                     ),
                     Row(
                       children: [
@@ -561,32 +275,61 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.001,
                         ),
-                        SizedBox(
-                          width: 200,
-                          child: DropdownButton<String>(
-                            value: selectedLanguage,
-                            isExpanded: true,
-                            dropdownColor:
-                                const Color.fromARGB(255, 28, 28, 28),
-                            items: languages
-                                .map((lang) => DropdownMenuItem(
-                                      value: lang,
-                                      child: Text(
-                                        lang,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontFamily:
-                                              GoogleFonts.jetBrainsMono()
-                                                  .fontFamily,
-                                        ),
-                                      ),
-                                    ))
-                                .toList(),
-                            onChanged: (value) =>
-                                setState(() => selectedLanguage = value!),
-                          ),
+                        SelectLanguage(
+                          selectedLanguage: selectedLanguage,
+                          languages: languages,
+                          onLanguageChanged: (value) {
+                            setState(() {
+                              selectedLanguage = value!;
+                            });
+                          },
                         ),
                       ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.001,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 17.0,
+                        right: 15.0,
+                      ),
+                      child: WarningBanner(
+                          message:
+                              'ClassyCode can make mistakes. Check important info.'),
+                      // child: Center(
+                      //   child: Container(
+                      //     height: MediaQuery.of(context).size.height * 0.025,
+                      //     width: MediaQuery.of(context).size.width * 0.250,
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(8.0),
+                      //     ),
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Padding(
+                      //           padding: const EdgeInsets.only(right: 5),
+                      //           child: Icon(
+                      //             Icons.error_outline,
+                      //             color: Colors.white,
+                      //             size:
+                      //                 MediaQuery.of(context).size.width * 0.009,
+                      //           ),
+                      //         ),
+                      //         Text(
+                      //           'ClassyCode can make mistakes. Check important info.',
+                      //           style: TextStyle(
+                      //             fontSize:
+                      //                 MediaQuery.of(context).size.width * 0.007,
+                      //             color: Colors.white,
+                      //             fontFamily:
+                      //                 GoogleFonts.jetBrainsMono().fontFamily,
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                     ),
                   ],
                 ),
@@ -611,6 +354,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-// Replace with a list of actual supported languages
-final languages = ['Select Language', 'Dart', 'Python', 'Java', 'JavaScript'];
