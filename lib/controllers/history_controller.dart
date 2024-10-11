@@ -12,8 +12,17 @@ class HistoryController {
     return await HistoryModel.createHistoryItem(userID, code, classDiagramImage, insightsData, language);
   }
 
-  static Stream<QuerySnapshot> getHistoryList(String userID) {
+  static Future<List<HistoryModel>> getHistoryList(String userID) async {
+    Stream<QuerySnapshot> historyQuery = HistoryModel.getHistoryList(userID);
+    return HistoryModel.mapHistoryList(historyQuery);
+  }
+
+  static Stream<QuerySnapshot> getHistoryListStream(String userID) {
     return HistoryModel.getHistoryList(userID);
+  }
+
+  static List<HistoryModel> mapHistoryStream(QuerySnapshot historyQuery) {
+    return HistoryModel.mapHistoryStream(historyQuery);
   }
 
   static Future<void> deleteHistoryItem(String historyID) async {
