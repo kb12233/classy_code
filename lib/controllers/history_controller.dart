@@ -6,23 +6,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class HistoryController {
-  HistoryModel? history;
+  static void triggerHistoryListUpdate(String userID) {
+    HistoryModel.triggerHistoryListUpdate(userID);
+  }
 
   static Future<String?> createHistoryItem(String userID, File? code, File? classDiagramImage, InsightsData insightsData, String language) async {
     return await HistoryModel.createHistoryItem(userID, code, classDiagramImage, insightsData, language);
   }
 
-  static Future<List<HistoryModel>> getHistoryList(String userID) async {
-    Stream<QuerySnapshot> historyQuery = HistoryModel.getHistoryList(userID);
-    return HistoryModel.mapHistoryList(historyQuery);
+  static Future<List<HistoryModel>> mapHistoryListStream(Stream<QuerySnapshot> historyStream) async {
+    return HistoryModel.mapHistoryList(historyStream);
   }
 
   static Stream<QuerySnapshot> getHistoryListStream(String userID) {
     return HistoryModel.getHistoryList(userID);
-  }
-
-  static List<HistoryModel> mapHistoryStream(QuerySnapshot historyQuery) {
-    return HistoryModel.mapHistoryStream(historyQuery);
   }
 
   static Future<void> deleteHistoryItem(String historyID) async {
