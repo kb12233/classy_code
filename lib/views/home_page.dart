@@ -44,7 +44,6 @@ class _HomePageState extends State<HomePage> {
   bool _isHoveringLogout = false;
   String? selectedValue;
   Stream<QuerySnapshot>? historyListStream;
-  List<HistoryModel> historyList = [];
 
   final languages = ['Select Language', 'Dart', 'Python', 'Java', 'JavaScript'];
   final List<String> historyItems = [
@@ -64,6 +63,9 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getUserEmail();
     getHistoryList();
+    
+    // This is for testing functionality of getHistoryList() and mapHistoryList()
+    // HistoryController.triggerHistoryListUpdate(FirebaseAuth.instance.currentUser!.uid);
   }
 
   @override
@@ -84,39 +86,32 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void getHistoryList() async {
+  void getHistoryList() {
     Stream<QuerySnapshot> historyItemList = HistoryController.getHistoryListStream(
         FirebaseAuth.instance.currentUser!.uid);
 
-    if (await historyItemList.isEmpty) {
-      debugPrint('No history items found');
-    } else {
-      debugPrint('History items found');
-      await for (var historySnapshot in historyItemList) {
-        for (var historyItem in historySnapshot.docs) {
-          debugPrint(historyItem['dateTime'].toDate().toString());
+    historyItemList.listen((QuerySnapshot snapshot) {
+      if (snapshot.docs.isEmpty) {
+        debugPrint('No history items found \n');
+      } else {
+        debugPrint('History items found \n');
+        int count = 0;
+        for (var historyItem in snapshot.docs) {
+          debugPrint('History snapshot $count');
+          count++;
+          debugPrint('${historyItem['dateTime'].toDate().toString()} \n');
         }
       }
-    }
 
-    QuerySnapshot historyItemListSnapshot = await historyItemList.first;
-
-    List<HistoryModel> hList = HistoryController.mapHistoryStream(historyItemListSnapshot);
-
-    if (hList.isEmpty) {
-      debugPrint('Mapping history items failed');
-    } else {
-      debugPrint('Mapping history items successful');
-      for (var historyItem in hList) {
-        debugPrint(historyItem.photoURL);
-      }
-    }
-    
-    setState(() {
-      historyListStream = historyItemList;
-      historyList = hList;
+      // Update state after processing stream
+      setState(() {
+        historyListStream = historyItemList;
+      });
+    }, onError: (error) {
+      debugPrint('Error fetching history: $error');
     });
   }
+
 
   void _pickFile() async {
     File? file = await inputManager.uploadInput();

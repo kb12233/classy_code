@@ -216,58 +216,74 @@ class HistoryModel {
   }
 
   static Future<List<HistoryModel>> mapHistoryList(
-      Stream<QuerySnapshot> snapshot) async {
+    Stream<QuerySnapshot> historyItemList) async {
     List<HistoryModel> historyList = [];
 
-    await for (var snapshot in snapshot) {
-      for (var doc in snapshot.docs) {
-        historyList.add(HistoryModel(
-          historyID: doc.id,
-          userID: doc['userID'],
-          dateTime: (doc['dateTime'] as Timestamp).toDate(),
-          codeURL: doc['codeURL'],
-          photoURL: doc['photoURL'],
-          totalClasses: doc['totalClasses'],
-          totalRelationships: doc['totalRelationships'],
-          typesOfRelationships: List<String>.from(doc['typesOfRelationships']),
-        ));
+    await for (QuerySnapshot snapshot in historyItemList) {
+      if (snapshot.docs.isEmpty) {
+        debugPrint('mapHistoryList: No history items found \n');
+      } else {
+        debugPrint('mapHistoryList: History items found \n');
+
+        for (var historyItem in snapshot.docs) {
+          HistoryModel h = HistoryModel(
+            historyID: historyItem.id,
+            userID: historyItem['userID'],
+            dateTime: (historyItem['dateTime'] as Timestamp).toDate(),
+            codeURL: historyItem['codeURL'],
+            photoURL: historyItem['photoURL'],
+            totalClasses: historyItem['totalClasses'],
+            totalRelationships: historyItem['totalRelationships'],
+            typesOfRelationships:
+                List<String>.from(historyItem['typesOfRelationships']),
+          );
+          debugPrint('mapHistoryList: History item added -> ${h.dateTime}');
+          historyList.add(h);
+        }
+        
+        debugPrint('mapHistoryList: Completed processing stream \n');
+        return historyList;
       }
     }
 
+    debugPrint('mapHistoryList: Completed processing stream \n');
     return historyList;
   }
 
-  static List<HistoryModel> mapHistoryStream(QuerySnapshot snapshot) {
-    return snapshot.docs.map((doc) {
-      var data = doc.data() as Map<String, dynamic>;
-
-      return HistoryModel(
-          userID: data['userID'],
-          dateTime: data['dateTime'].toDate(),
-          totalClasses: data['totalClasses'],
-          totalRelationships: data['totalRelationships'],
-          typesOfRelationships: List<String>.from(data['typesOfRelationships']),);
-    }).toList();
-  }
-
   static void triggerHistoryListUpdate(String userID) async {
+    debugPrint('triggerHistoryListUpdate: just entered ${DateTime.now()}');
     var history = getHistoryList(userID);
     var historyList = await mapHistoryList(history);
 
-    for (var historyItem in historyList) {
-      debugPrint(historyItem.photoURL);
+    debugPrint('triggerHistoryListUpdate: mapHistoryList completed \n');
+    var b = printHistoryList(historyList);
+    debugPrint('triggerHistoryListUpdate: $b');
+  }
+
+  static bool printHistoryList(List<HistoryModel> historyList) {
+    bool isHistoryListNotEmpty = false;
+    if (historyList.isNotEmpty) {
+      isHistoryListNotEmpty = true;
+      debugPrint('printHistoryList: History items found');
+      for (var historyItem in historyList) {
+        debugPrint('historyItem: ${historyItem.dateTime}');
+      }
+    } else {
+      debugPrint('printHistoryList: No history items found');
     }
+    debugPrint('printHistoryList: Completed \n');
+    return isHistoryListNotEmpty;
   }
 
   // TODO implement deleteHistoryItem
   static Future<void> deleteHistoryItem(String historyID) async {
     try {
-      CollectionReference history_table =
+      CollectionReference historyTable =
           FirebaseFirestore.instance.collection('history');
 
-      await history_table.doc(historyID).delete();
+      await historyTable.doc(historyID).delete();
     } on FirebaseException catch (e) {
-      print('Error deleting history item: $e');
+      debugPrint('Error deleting history item: $e');
     }
   }
 
@@ -278,7 +294,7 @@ class HistoryModel {
 
       return await history_table.doc(historyID).get();
     } on FirebaseException catch (e) {
-      print('Error getting history item: $e');
+      debugPrint('Error getting history item: $e');
       return null;
     }
   }
