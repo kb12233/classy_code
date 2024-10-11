@@ -215,30 +215,44 @@ class HistoryModel {
     return history;
   }
 
-  static List<HistoryModel> mapHistoryList(Stream<QuerySnapshot> snapshot) {
+  static Future<List<HistoryModel>> mapHistoryList(
+      Stream<QuerySnapshot> snapshot) async {
     List<HistoryModel> historyList = [];
 
-    snapshot.listen((snapshot) {
+    await for (var snapshot in snapshot) {
       for (var doc in snapshot.docs) {
         historyList.add(HistoryModel(
-            historyID: doc.id,
-            userID: doc['userID'],
-            dateTime: (doc['dateTime'] as Timestamp).toDate(),
-            codeURL: doc['codeURL'],
-            photoURL: doc['photoURL'],
-            totalClasses: doc['totalClasses'],
-            totalRelationships: doc['totalRelationships'],
-            typesOfRelationships:
-                List<String>.from(doc['typesOfRelationships'])));
+          historyID: doc.id,
+          userID: doc['userID'],
+          dateTime: (doc['dateTime'] as Timestamp).toDate(),
+          codeURL: doc['codeURL'],
+          photoURL: doc['photoURL'],
+          totalClasses: doc['totalClasses'],
+          totalRelationships: doc['totalRelationships'],
+          typesOfRelationships: List<String>.from(doc['typesOfRelationships']),
+        ));
       }
-    });
+    }
 
     return historyList;
   }
 
-  static void triggerHistoryListUpdate(String userID) {
+  static List<HistoryModel> mapHistoryStream(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      var data = doc.data() as Map<String, dynamic>;
+
+      return HistoryModel(
+          userID: data['userID'],
+          dateTime: data['dateTime'].toDate(),
+          totalClasses: data['totalClasses'],
+          totalRelationships: data['totalRelationships'],
+          typesOfRelationships: List<String>.from(data['typesOfRelationships']),);
+    }).toList();
+  }
+
+  static void triggerHistoryListUpdate(String userID) async {
     var history = getHistoryList(userID);
-    var historyList = mapHistoryList(history);
+    var historyList = await mapHistoryList(history);
 
     for (var historyItem in historyList) {
       debugPrint(historyItem.photoURL);

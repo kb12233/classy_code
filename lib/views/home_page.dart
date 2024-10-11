@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:classy_code/controllers/history_controller.dart';
 import 'package:classy_code/img_code_converter.dart';
 import 'package:classy_code/input_manager.dart';
+import 'package:classy_code/models/history_model.dart';
 import 'package:classy_code/models/insight_data.dart';
 import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/views/components/appbar.dart';
@@ -14,6 +15,7 @@ import 'package:classy_code/views/components/generated_code_section.dart';
 import 'package:classy_code/views/components/loading_overlay.dart';
 import 'package:classy_code/views/components/select_laguage.dart';
 import 'package:classy_code/views/components/upload_classdiagram_section.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -28,6 +30,8 @@ class _HomePageState extends State<HomePage> {
   final ImageToCodeConverter converter = ImageToCodeConverter();
   final OutPutManager outPutManager = OutPutManager();
   final HistoryController historyController = HistoryController();
+
+  // states
   File? _selectedFile;
   String generatedCode = "";
   int totalClasses = 0;
@@ -38,6 +42,10 @@ class _HomePageState extends State<HomePage> {
   String userEmail = '';
   bool _isHovering = false;
   bool _isHoveringLogout = false;
+  String? selectedValue;
+  Stream<QuerySnapshot>? historyListStream;
+  List<HistoryModel> historyList = [];
+
   final languages = ['Select Language', 'Dart', 'Python', 'Java', 'JavaScript'];
   final List<String> historyItems = [
     'ashley moriah',
@@ -51,12 +59,20 @@ class _HomePageState extends State<HomePage> {
     'kb',
   ];
 
-  String? selectedValue;
-
   @override
   void initState() {
     super.initState();
     getUserEmail();
+    getHistoryList();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // check if firebase user is logged in, then log out
+    if (FirebaseAuth.instance.currentUser != null) {
+      FirebaseAuth.instance.signOut();
+    }
   }
 
   void getUserEmail() {
@@ -66,6 +82,40 @@ class _HomePageState extends State<HomePage> {
         userEmail = user.email ?? '';
       });
     }
+  }
+
+  void getHistoryList() async {
+    Stream<QuerySnapshot> historyItemList = HistoryController.getHistoryListStream(
+        FirebaseAuth.instance.currentUser!.uid);
+
+    if (await historyItemList.isEmpty) {
+      debugPrint('No history items found');
+    } else {
+      debugPrint('History items found');
+      await for (var historySnapshot in historyItemList) {
+        for (var historyItem in historySnapshot.docs) {
+          debugPrint(historyItem['dateTime'].toDate().toString());
+        }
+      }
+    }
+
+    QuerySnapshot historyItemListSnapshot = await historyItemList.first;
+
+    List<HistoryModel> hList = HistoryController.mapHistoryStream(historyItemListSnapshot);
+
+    if (hList.isEmpty) {
+      debugPrint('Mapping history items failed');
+    } else {
+      debugPrint('Mapping history items successful');
+      for (var historyItem in hList) {
+        debugPrint(historyItem.photoURL);
+      }
+    }
+    
+    setState(() {
+      historyListStream = historyItemList;
+      historyList = hList;
+    });
   }
 
   void _pickFile() async {
