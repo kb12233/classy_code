@@ -25,14 +25,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String selectedLanguage = 'Select Language';
   final InputManager inputManager = InputManager();
   final ImageToCodeConverter converter = ImageToCodeConverter();
   final OutPutManager outPutManager = OutPutManager();
   final HistoryController historyController = HistoryController();
 
   // states
+  String? selectedValue;
+  String selectedLanguage = 'Select Language';
   File? _selectedFile;
+  HistoryModel? selectedHistoryItem;
   String generatedCode = "";
   int totalClasses = 0;
   int totalRelationships = 0;
@@ -42,28 +44,17 @@ class _HomePageState extends State<HomePage> {
   String userEmail = '';
   bool _isHovering = false;
   bool _isHoveringLogout = false;
-  String? selectedValue;
   Stream<QuerySnapshot>? historyListStream;
+  List<HistoryModel> historyList = [];
 
   final languages = ['Select Language', 'Dart', 'Python', 'Java', 'JavaScript'];
-  final List<String> historyItems = [
-    'ashley moriah',
-    'mikka ellazxczxcZxczxczxc Zxc ZxdvasdvSzdvs',
-    'kb',
-    'ashley moriah',
-    'mikka ella',
-    'kb',
-    'ashley moriah',
-    'mikka ella',
-    'kb',
-  ];
 
   @override
   void initState() {
     super.initState();
     getUserEmail();
     getHistoryList();
-    
+
     // This is for testing functionality of getHistoryList() and mapHistoryList()
     // HistoryController.triggerHistoryListUpdate(FirebaseAuth.instance.currentUser!.uid);
   }
@@ -86,9 +77,10 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void getHistoryList() {
-    Stream<QuerySnapshot> historyItemList = HistoryController.getHistoryListStream(
-        FirebaseAuth.instance.currentUser!.uid);
+  void getHistoryList() async {
+    Stream<QuerySnapshot> historyItemList =
+        HistoryController.getHistoryListStream(
+            FirebaseAuth.instance.currentUser!.uid);
 
     historyItemList.listen((QuerySnapshot snapshot) {
       if (snapshot.docs.isEmpty) {
@@ -101,17 +93,23 @@ class _HomePageState extends State<HomePage> {
           count++;
           debugPrint('${historyItem['dateTime'].toDate().toString()} \n');
         }
-      }
+      }      
 
       // Update state after processing stream
       setState(() {
         historyListStream = historyItemList;
+        // historyList = hList;
       });
     }, onError: (error) {
       debugPrint('Error fetching history: $error');
     });
-  }
 
+    List<HistoryModel> hList = await HistoryController.mapHistoryListStream(historyItemList);
+
+    setState(() {
+      historyList = hList;
+    });
+  }
 
   void _pickFile() async {
     File? file = await inputManager.uploadInput();
@@ -291,11 +289,12 @@ class _HomePageState extends State<HomePage> {
             _isHoveringLogout = hover;
           });
         },
-        historyItems: historyItems,
+        historyItems: historyList,
         selectedValue: selectedValue,
-        onChanged: (String? value) {
+        onChanged: (HistoryModel? value) {
           setState(() {
-            selectedValue = value;
+            selectedHistoryItem = value;
+            debugPrint('Selected value: ${selectedHistoryItem?.dateTime}');
           });
         },
       ),
@@ -342,39 +341,6 @@ class _HomePageState extends State<HomePage> {
                       child: WarningBanner(
                           message:
                               'ClassyCode can make mistakes. Check important info.'),
-                      // child: Center(
-                      //   child: Container(
-                      //     height: MediaQuery.of(context).size.height * 0.025,
-                      //     width: MediaQuery.of(context).size.width * 0.250,
-                      //     decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(8.0),
-                      //     ),
-                      //     child: Row(
-                      //       mainAxisAlignment: MainAxisAlignment.center,
-                      //       children: [
-                      //         Padding(
-                      //           padding: const EdgeInsets.only(right: 5),
-                      //           child: Icon(
-                      //             Icons.error_outline,
-                      //             color: Colors.white,
-                      //             size:
-                      //                 MediaQuery.of(context).size.width * 0.009,
-                      //           ),
-                      //         ),
-                      //         Text(
-                      //           'ClassyCode can make mistakes. Check important info.',
-                      //           style: TextStyle(
-                      //             fontSize:
-                      //                 MediaQuery.of(context).size.width * 0.007,
-                      //             color: Colors.white,
-                      //             fontFamily:
-                      //                 GoogleFonts.jetBrainsMono().fontFamily,
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
                     ),
                   ],
                 ),

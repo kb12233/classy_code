@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:classy_code/models/history_model.dart';
 import 'package:classy_code/views/components/classycode_custom_text.dart';
 import 'package:classy_code/views/components/logo_with_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -13,9 +14,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHovering;
   final bool isHoveringLogout;
   final Function(bool) setHoveringLogout;
-  final List<String> historyItems;
+  final List<HistoryModel> historyItems;
   final String? selectedValue;
-  final Function(String?) onChanged;
+  final Function(HistoryModel?) onChanged;
   final greybg = Color(0xFF202124);
 
   CustomAppBar({
@@ -66,7 +67,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           color: greybg,
                         ),
                         child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
+                          child: DropdownButton2<HistoryModel>(
                             isExpanded: true,
                             hint: customText(
                                 text: 'History',
@@ -74,17 +75,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 isBold: false,
                                 color: Colors.white),
                             items: historyItems
-                                .map((String value) => DropdownMenuItem<String>(
+                                .map((HistoryModel value) => DropdownMenuItem<HistoryModel>(
                                       value: value,
-                                      child: customText(
-                                          text: value,
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(top: 5, bottom: 5),
+                                        color: greybg,
+                                        child: customText(
+                                          text: '${value.dateTime}',
                                           fontSize:
                                               screenDiagonal(context) * 0.01,
                                           isBold: false,
                                           color: Colors.white),
+                                      ),
                                     ))
                                 .toList(),
-                            value: selectedValue,
                             onChanged: onChanged,
                             dropdownStyleData: DropdownStyleData(
                                 maxHeight: screenDiagonal(context) * 0.3,
