@@ -48,6 +48,8 @@ dependencies:
   flutter_highlight: ^0.7.0
   firebase_storage: ^11.7.7
   dropdown_button2: ^2.3.9
+  intl: ^0.19.0
+
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +77,10 @@ flutter:
   assets:
     - lib/images/logo_dark.png
     - lib/images/logo_light.png
+    - lib/images/dart_logo.png
+    - lib/images/java_logo.png
+    - lib/images/javascript_logo.png
+    - lib/images/python_logo.png
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

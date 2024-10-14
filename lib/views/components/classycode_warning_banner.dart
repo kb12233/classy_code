@@ -13,7 +13,7 @@ class WarningBanner extends StatelessWidget {
     Key? key,
     this.icon = Icons.error_outline,
     required this.message,
-    this.textColor = Colors.white,
+    this.textColor = Colors.white38,
     this.iconSizeFactor = 0.009,
     this.textSizeFactor = 0.007,
   }) : super(key: key);
