@@ -9,7 +9,7 @@ import 'package:classy_code/models/history_model.dart';
 import 'package:classy_code/models/insight_data.dart';
 import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/views/components/appbar.dart';
-import 'package:classy_code/views/components/classycode_warning_banner.dart';
+import 'package:classy_code/views/components/warning_banner.dart';
 import 'package:classy_code/views/components/generate_button.dart';
 import 'package:classy_code/views/components/generated_code_section.dart';
 import 'package:classy_code/views/components/loading_overlay.dart';

@@ -3,11 +3,11 @@
 import 'dart:math';
 
 import 'package:classy_code/controllers/registration_controller.dart';
-import 'package:classy_code/views/components/classycode_alert_dialog.dart';
-import 'package:classy_code/views/components/classycode_custom_text.dart';
-import 'package:classy_code/views/components/classycode_elevated_button.dart';
-import 'package:classy_code/views/components/classycode_input_field.dart';
-import 'package:classy_code/views/components/classycode_outlined_button.dart';
+import 'package:classy_code/views/components/alert_dialog.dart';
+import 'package:classy_code/views/components/custom_text.dart';
+import 'package:classy_code/views/components/elevated_button.dart';
+import 'package:classy_code/views/components/input_field.dart';
+import 'package:classy_code/views/components/outlined_button.dart';
 import 'package:classy_code/views/components/logo_with_text.dart';
 import 'package:flutter/material.dart';
 

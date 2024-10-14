@@ -3,8 +3,8 @@
 import 'dart:math';
 
 import 'package:classy_code/models/history_model.dart';
-import 'package:classy_code/views/components/classycode_custom_text.dart';
-import 'package:classy_code/views/components/classycode_historycard.dart';
+import 'package:classy_code/views/components/custom_text.dart';
+import 'package:classy_code/views/components/history_card.dart';
 import 'package:classy_code/views/components/logo_with_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';

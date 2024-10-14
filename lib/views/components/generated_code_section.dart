@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/subsystems/output_management/save_status.dart';
-import 'package:classy_code/views/components/classycode_custom_text.dart';
+import 'package:classy_code/views/components/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prism/flutter_prism.dart';
 import 'package:google_fonts/google_fonts.dart';
