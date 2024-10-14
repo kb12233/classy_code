@@ -1,9 +1,11 @@
+import 'package:classy_code/state_manager/state_controller.dart';
 import 'package:classy_code/views/home_page.dart';
 import 'package:classy_code/views/login_page.dart';
 import 'package:classy_code/views/registration.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 
@@ -13,7 +15,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await dotenv.load();
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => StateController(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
