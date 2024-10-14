@@ -74,6 +74,7 @@ class UploadClassDiagramSection extends StatelessWidget {
                         minScale: 0.5,
                         maxScale: 10.0,
                         child: Image.file(
+                          key: UniqueKey(),
                           selectedFile!,
                           fit: BoxFit.contain,
                         ),

@@ -20,6 +20,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/painting.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -62,8 +65,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     super.dispose();
+
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String filePath = '${appDocDir.path}/downloaded_image.png';
+
+    // check if file already exists
+    if (await File(filePath).exists()) {
+      await File(filePath).delete();
+    }
+
     // check if firebase user is logged in, then log out
     if (FirebaseAuth.instance.currentUser != null) {
       FirebaseAuth.instance.signOut();
@@ -271,16 +283,11 @@ class _HomePageState extends State<HomePage> {
       //   typesOfRelationships = insightsData.typesOfRelationships;
       //   _isGenerating = false;
       // });
-      Provider.of<StateController>(context, listen: false)
-          .setGeneratedCode(code ?? '');
-      Provider.of<StateController>(context, listen: false)
-          .setTotalClasses(insightsData.totalClasses);
-      Provider.of<StateController>(context, listen: false)
-          .setTotalRelationships(insightsData.totalRelationships);
-      Provider.of<StateController>(context, listen: false)
-          .setTypesOfRelationships(insightsData.typesOfRelationships);
-      Provider.of<StateController>(context, listen: false)
-          .setIsGenerating(false);
+      notifier.setGeneratedCode(code ?? '');
+      notifier.setTotalClasses(insightsData.totalClasses);
+      notifier.setTotalRelationships(insightsData.totalRelationships);
+      notifier.setTypesOfRelationships(insightsData.typesOfRelationships);
+      notifier.setIsGenerating(false);
       getHistoryList();
     } else {
       showDialog(
@@ -301,6 +308,46 @@ class _HomePageState extends State<HomePage> {
         },
       );
     }
+  }
+
+  void clearImageCache() {
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
+  }
+  
+  void displaySelectedHistoryItem(StateController notifier) async {
+    var response = await http.get(Uri.parse(notifier.selectedHistoryItem!.photoURL));
+    
+    if (response.statusCode == 200) {
+      // store image in a file
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String filePath = '${appDocDir.path}/downloaded_image.png';
+      debugPrint('File Path: $filePath');
+
+      clearImageCache();
+      
+      File file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+      
+      notifier.setSelectedFile(file);
+      debugPrint('Image saved to: $filePath');
+    } else {
+      debugPrint(
+          'Failed to download image. Status code: ${response.statusCode}');
+    }
+    
+    var codeResponse = await http.get(Uri.parse(notifier.selectedHistoryItem!.codeURL));
+    if (codeResponse.statusCode == 200) {
+      // store content of code file in string
+      String codeContent = "```${notifier.selectedHistoryItem!.language}\n${codeResponse.body}\n```";
+      notifier.setGeneratedCode(codeContent);
+
+      debugPrint('Downloaded Code Content: $codeContent');
+    }
+
+    notifier.setTotalClasses(notifier.selectedHistoryItem!.totalClasses);
+    notifier.setTotalRelationships(notifier.selectedHistoryItem!.totalRelationships);
+    notifier.setTypesOfRelationships(notifier.selectedHistoryItem!.typesOfRelationships);
   }
 
   @override
@@ -332,6 +379,8 @@ class _HomePageState extends State<HomePage> {
           // });
           notifier.setSelectedHistoryItem(value);
           debugPrint('Selected history item: ${notifier.selectedHistoryItem?.dateTime}');
+
+          displaySelectedHistoryItem(notifier);
         },
       ),
       body: Stack(
