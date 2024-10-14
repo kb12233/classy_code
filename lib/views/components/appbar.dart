@@ -80,7 +80,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     DropdownMenuItem<HistoryModel>(
                                       value: value,
                                       child: HistoryCard(
-                                        imagePath: 'lib/images/python_logo.png',
+                                        language: value.language,
                                         dateTime: value.dateTime,
                                         onDelete: () {
                                           debugPrint(

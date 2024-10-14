@@ -7,12 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class HistoryCard extends StatelessWidget {
-  final String imagePath;
+  final String language;
   final DateTime dateTime;
   final VoidCallback onDelete;
+  final Map<String, String> languageIconPaths = {
+    'dart': 'lib/images/dart_logo.png',
+    'java': 'lib/images/java_logo.png',
+    'javascript': 'lib/images/javascript_logo.png',
+    'python': 'lib/images/python_logo.png'
+  };
 
   HistoryCard({
-    required this.imagePath,
+    required this.language,
     required this.dateTime,
     required this.onDelete,
   });
@@ -47,7 +53,7 @@ class HistoryCard extends StatelessWidget {
                 children: [
                   SizedBox(width: 10),
                   Image.asset(
-                    imagePath,
+                    languageIconPaths[language]!,
                     height: screenDiagonal(context) * 0.03,
                     width: screenDiagonal(context) * 0.03,
                   ),
