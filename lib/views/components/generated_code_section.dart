@@ -125,14 +125,6 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Text(
-              //   'Generated Code',
-              //   style: TextStyle(
-              //     color: Colors.white,
-              //     fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-              //     fontSize: 20,
-              //   ),
-              // ),
               customText(
                   text: 'Generated Code',
                   fontSize: screenDiagonal(context) * 0.011,

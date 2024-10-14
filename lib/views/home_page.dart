@@ -8,6 +8,7 @@ import 'package:classy_code/input_manager.dart';
 import 'package:classy_code/models/history_model.dart';
 import 'package:classy_code/models/insight_data.dart';
 import 'package:classy_code/output_manager.dart';
+import 'package:classy_code/state_manager/state_controller.dart';
 import 'package:classy_code/views/components/appbar.dart';
 import 'package:classy_code/views/components/warning_banner.dart';
 import 'package:classy_code/views/components/generate_button.dart';
@@ -18,6 +19,7 @@ import 'package:classy_code/views/components/upload_classdiagram_section.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -93,37 +95,44 @@ class _HomePageState extends State<HomePage> {
           count++;
           debugPrint('${historyItem['dateTime'].toDate().toString()} \n');
         }
-      }      
+      }
 
       // Update state after processing stream
-      setState(() {
-        historyListStream = historyItemList;
-        // historyList = hList;
-      });
+      // setState(() {
+      //   historyListStream = historyItemList;
+      //   // historyList = hList;
+      // });
+      Provider.of<StateController>(context, listen: false)
+          .setHistoryListStream(historyItemList);
     }, onError: (error) {
       debugPrint('Error fetching history: $error');
     });
 
-    List<HistoryModel> hList = await HistoryController.mapHistoryListStream(historyItemList);
+    List<HistoryModel> hList =
+        await HistoryController.mapHistoryListStream(historyItemList);
 
-    setState(() {
-      historyList = hList;
-    });
+    // setState(() {
+    //   historyList = hList;
+    // });
+    Provider.of<StateController>(context, listen: false).setHistoryList(hList);
   }
 
   void _pickFile() async {
     File? file = await inputManager.uploadInput();
 
     if (file != null) {
-      setState(() {
-        _isUploading = true;
-      });
+      // setState(() {
+      //   _isUploading = true;
+      // });
+      Provider.of<StateController>(context, listen: false).setIsUploading(true);
 
       bool isValid = await inputManager.verifyInput(file);
 
-      setState(() {
-        _isUploading = false;
-      });
+      // setState(() {
+      //   _isUploading = false;
+      // });
+      Provider.of<StateController>(context, listen: false)
+          .setIsUploading(false);
 
       if (!isValid) {
         // show an alert dialog
@@ -145,21 +154,28 @@ class _HomePageState extends State<HomePage> {
           },
         );
       } else {
-        setState(() {
-          _selectedFile = file;
-        });
+        // setState(() {
+        //   _selectedFile = file;
+        // });
+        Provider.of<StateController>(context, listen: false)
+            .setSelectedFile(file);
       }
     }
   }
 
   void generate() async {
-    if (selectedLanguage != "Select Language") {
-      setState(() {
-        _isGenerating = true;
-      });
+    final notifier = Provider.of<StateController>(context, listen: false);
+    if (notifier.selectedLanguage != "Select Language") {
+      // setState(() {
+      //   _isGenerating = true;
+      // });
+
+      notifier.setIsGenerating(true);
       String? code;
       try {
-        code = await converter.convert(_selectedFile!, selectedLanguage);
+        // code = await converter.convert(_selectedFile!, selectedLanguage);
+        code = await converter.convert(
+            notifier.selectedFile!, notifier.selectedLanguage);
       } on Exception catch (e) {
         showDialog(
           context: context,
@@ -231,13 +247,13 @@ class _HomePageState extends State<HomePage> {
       print('File created: ${codeFile.path}');
 
       InsightsData insightsData =
-          await converter.extractInsights(_selectedFile!);
+          await converter.extractInsights(notifier.selectedFile!);
 
       try {
         String? result = await HistoryController.createHistoryItem(
             FirebaseAuth.instance.currentUser!.uid,
             codeFile,
-            _selectedFile,
+            notifier.selectedFile,
             insightsData,
             language);
       } on Exception catch (e) {
@@ -248,13 +264,24 @@ class _HomePageState extends State<HomePage> {
         await codeFile.delete();
       }
 
-      setState(() {
-        generatedCode = code ?? '';
-        totalClasses = insightsData.totalClasses;
-        totalRelationships = insightsData.totalRelationships;
-        typesOfRelationships = insightsData.typesOfRelationships;
-        _isGenerating = false;
-      });
+      // setState(() {
+      //   generatedCode = code ?? '';
+      //   totalClasses = insightsData.totalClasses;
+      //   totalRelationships = insightsData.totalRelationships;
+      //   typesOfRelationships = insightsData.typesOfRelationships;
+      //   _isGenerating = false;
+      // });
+      Provider.of<StateController>(context, listen: false)
+          .setGeneratedCode(code ?? '');
+      Provider.of<StateController>(context, listen: false)
+          .setTotalClasses(insightsData.totalClasses);
+      Provider.of<StateController>(context, listen: false)
+          .setTotalRelationships(insightsData.totalRelationships);
+      Provider.of<StateController>(context, listen: false)
+          .setTypesOfRelationships(insightsData.typesOfRelationships);
+      Provider.of<StateController>(context, listen: false)
+          .setIsGenerating(false);
+      getHistoryList();
     } else {
       showDialog(
         context: context,
@@ -278,24 +305,33 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final notifier = Provider.of<StateController>(context);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: CustomAppBar(
         userEmail: userEmail,
-        isHovering: _isHovering,
-        isHoveringLogout: _isHoveringLogout,
+        // userEmail: notifier.userEmail,
+        // userEmail: notifier.userEmail,
+        // isHovering: _isHovering,
+        isHovering: notifier.isHovering,
+        // isHoveringLogout: _isHoveringLogout,
+        isHoveringLogout: notifier.isHoveringLogout,
         setHoveringLogout: (bool hover) {
-          setState(() {
-            _isHoveringLogout = hover;
-          });
+          // setState(() {
+          //   _isHoveringLogout = hover;
+          // });
+          notifier.setIsHoveringLogout(hover);
         },
-        historyItems: historyList,
+        // historyItems: historyList,
+        historyItems: notifier.historyList,
         selectedValue: selectedValue,
         onChanged: (HistoryModel? value) {
-          setState(() {
-            selectedHistoryItem = value;
-            debugPrint('Selected value: ${selectedHistoryItem?.dateTime}');
-          });
+          // setState(() {
+          //   selectedHistoryItem = value;
+          //   debugPrint('Selected value: ${selectedHistoryItem?.dateTime}');
+          // });
+          notifier.setSelectedHistoryItem(value);
+          debugPrint('Selected history item: ${notifier.selectedHistoryItem?.dateTime}');
         },
       ),
       body: Stack(
@@ -307,8 +343,10 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     UploadClassDiagramSection(
-                      selectedFile: _selectedFile,
-                      isUploading: _isUploading,
+                      // selectedFile: _selectedFile,
+                      selectedFile: notifier.selectedFile,
+                      // isUploading: _isUploading,
+                      isUploading: notifier.isUploading,
                       pickFile: _pickFile,
                     ),
                     Row(
@@ -320,12 +358,13 @@ class _HomePageState extends State<HomePage> {
                           width: MediaQuery.of(context).size.width * 0.001,
                         ),
                         SelectLanguage(
-                          selectedLanguage: selectedLanguage,
+                          selectedLanguage: notifier.selectedLanguage,
                           languages: languages,
                           onLanguageChanged: (value) {
-                            setState(() {
-                              selectedLanguage = value!;
-                            });
+                            // setState(() {
+                            //   selectedLanguage = value!;
+                            // });
+                            notifier.setSelectedLanguage(value!);
                           },
                         ),
                       ],
@@ -351,15 +390,18 @@ class _HomePageState extends State<HomePage> {
               ),
               Expanded(
                 child: GeneratedCodeSection(
-                  generatedCode: generatedCode,
+                  // generatedCode: generatedCode,
+                  generatedCode: notifier.generatedCode,
                   outPutManager: outPutManager,
                 ),
               ),
             ],
           ),
-          if (_isUploading || _isGenerating)
+          // if (_isUploading || _isGenerating)
+          if (notifier.isUploading || notifier.isGenerating)
             LoadingOverlay(
-                isUploading: _isUploading, isGenerating: _isGenerating),
+                isUploading: notifier.isUploading,
+                isGenerating: notifier.isGenerating),
         ],
       ),
     );

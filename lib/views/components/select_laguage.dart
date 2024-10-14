@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:classy_code/state_manager/state_controller.dart';
 import 'package:classy_code/views/components/custom_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SelectLanguage extends StatefulWidget {
   final String selectedLanguage;
@@ -30,6 +32,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
 
   @override
   Widget build(BuildContext context) {
+    final notifier = Provider.of<StateController>(context);
     return Padding(
       padding: const EdgeInsets.only(right: 15.0),
       child: Container(
@@ -57,7 +60,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              value: widget.selectedLanguage,
+              value: notifier.selectedLanguage,
               isExpanded: true,
               items: widget.languages
                   .map((lang) => DropdownMenuItem(

@@ -2,13 +2,17 @@
 
 import 'dart:math';
 
+import 'package:classy_code/controllers/history_controller.dart';
 import 'package:classy_code/models/history_model.dart';
+import 'package:classy_code/state_manager/state_controller.dart';
 import 'package:classy_code/views/components/custom_text.dart';
 import 'package:classy_code/views/components/history_card.dart';
 import 'package:classy_code/views/components/logo_with_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userEmail;
@@ -44,6 +48,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notifier = Provider.of<StateController>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -75,14 +80,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 fontSize: screenDiagonal(context) * 0.01,
                                 isBold: false,
                                 color: Colors.white),
-                            items: historyItems
+                            items: notifier.historyList
                                 .map((HistoryModel value) =>
                                     DropdownMenuItem<HistoryModel>(
                                       value: value,
                                       child: HistoryCard(
                                         language: value.language,
                                         dateTime: value.dateTime,
-                                        onDelete: () {
+                                        onDelete: () async {
+                                          notifier.deleteHistoryItem(value);
+
                                           debugPrint(
                                               "Delete item ${value.dateTime}");
                                         },
@@ -197,6 +204,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onSelected: (String result) {
                     if (result == 'logout') {
                       FirebaseAuth.instance.signOut();
+                      debugPrint('User logged out.');
+                      notifier.resetStates();
                       Navigator.of(context).pop();
                     }
                   },
