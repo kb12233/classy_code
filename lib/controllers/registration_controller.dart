@@ -19,7 +19,7 @@ class RegistrationController {
         return 'Please enter a password.';
       } else if (await UserModel.checkUserExists(email)) {
         return 'User already exists.';
-      } else {
+      } else if (await UserModel.checkUserExists(email) == false) {
         UserCredential userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
@@ -40,6 +40,8 @@ class RegistrationController {
         }
 
         return 'Success';
+      } else {
+        return 'An error occured. Please try again.';
       }
     } on FirebaseAuthException catch (e) {
       return e.message;
