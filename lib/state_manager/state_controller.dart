@@ -97,16 +97,6 @@ class StateController extends ChangeNotifier {
   }
 
   
-  // userEmail state
-  String _userEmail = '';
-  String get userEmail => _userEmail;
-
-  void setUserEmail(String value) {
-    _userEmail = value;
-    notifyListeners();
-  }
-
-  
   // isHovering state
   bool _isHovering = false;
   bool get isHovering => _isHovering;
@@ -163,7 +153,6 @@ class StateController extends ChangeNotifier {
     _typesOfRelationships = [];
     _isUploading = false;
     _isGenerating = false;
-    _userEmail = '';
     _isHovering = false;
     _isHoveringLogout = false;
     _historyList = [];

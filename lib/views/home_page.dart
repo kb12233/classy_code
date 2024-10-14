@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // getUserEmail();
+    getUserEmail();
     getHistoryList();
 
     // This is for testing functionality of getHistoryList() and mapHistoryList()
@@ -68,9 +68,6 @@ class _HomePageState extends State<HomePage> {
     if (FirebaseAuth.instance.currentUser != null) {
       FirebaseAuth.instance.signOut();
     }
-
-    // reset states
-    Provider.of<StateController>(context, listen: false).resetStates();
   }
 
   void getUserEmail() {
@@ -80,9 +77,6 @@ class _HomePageState extends State<HomePage> {
         userEmail = user.email ?? '';
       });
     }
-
-    Provider.of<StateController>(context, listen: false)
-        .setUserEmail(userEmail);
   }
 
   void getHistoryList() async {
@@ -315,9 +309,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: CustomAppBar(
-        //userEmail: userEmail,
+        userEmail: userEmail,
         // userEmail: notifier.userEmail,
-        userEmail: FirebaseAuth.instance.currentUser!.email ?? '',
+        // userEmail: notifier.userEmail,
         // isHovering: _isHovering,
         isHovering: notifier.isHovering,
         // isHoveringLogout: _isHoveringLogout,

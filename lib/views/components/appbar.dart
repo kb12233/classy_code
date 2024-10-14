@@ -89,7 +89,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                         dateTime: value.dateTime,
                                         onDelete: () async {
                                           notifier.deleteHistoryItem(value);
-                                          
+
                                           debugPrint(
                                               "Delete item ${value.dateTime}");
                                         },
@@ -204,6 +204,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onSelected: (String result) {
                     if (result == 'logout') {
                       FirebaseAuth.instance.signOut();
+                      debugPrint('User logged out.');
+                      notifier.resetStates();
                       Navigator.of(context).pop();
                     }
                   },
