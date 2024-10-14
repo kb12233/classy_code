@@ -31,59 +31,63 @@ class HistoryCard extends StatelessWidget {
 
     return Container(
       height: screenDiagonal(context) * 0.5,
-      padding: EdgeInsets.only(bottom: 5),
+      padding: EdgeInsets.only(top: 5, bottom: 5),
       margin: EdgeInsets.symmetric(vertical: 3),
       decoration: BoxDecoration(
-        color: greybg,
+        color: Colors.black,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Image.asset(
-                  imagePath,
-                  height: screenDiagonal(context) * 0.03,
-                  width: screenDiagonal(context) * 0.03,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 15),
-                      child: customText(
-                        text: date,
-                        fontSize: screenDiagonal(context) * 0.009,
-                        isBold: false,
-                        color: Colors.white,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  SizedBox(width: 10),
+                  Image.asset(
+                    imagePath,
+                    height: screenDiagonal(context) * 0.03,
+                    width: screenDiagonal(context) * 0.03,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 15),
+                        child: customText(
+                          text: date,
+                          fontSize: screenDiagonal(context) * 0.009,
+                          isBold: false,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 15),
-                      child: customText(
-                        text: time,
-                        fontSize: screenDiagonal(context) * 0.008,
-                        isBold: false,
-                        color: Colors.white54,
+                      Container(
+                        margin: EdgeInsets.only(left: 15),
+                        child: customText(
+                          text: time,
+                          fontSize: screenDiagonal(context) * 0.008,
+                          isBold: false,
+                          color: Colors.white54,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            // Delete button on the right
-            Padding(
-              padding: EdgeInsets.only(bottom: 10), // Align icon vertically
-              child: IconButton(
-                onPressed: onDelete,
-                icon: Icon(Icons.delete_outline_rounded, color: Colors.red),
+                    ],
+                  ),
+                ],
               ),
-            ),
-          ],
+              // Delete button on the right
+              IconButton(
+                onPressed: onDelete,
+                icon: Icon(
+                  Icons.delete_outline_rounded,
+                  color: Colors.red,
+                  //size: 30,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
