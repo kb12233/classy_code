@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 Widget customAlertDialog({
   required BuildContext context,
   required String title,
-  required String message,
+  String message = "",
   required IconData icon,
   required Color bgColor,
   required Color iconColor,

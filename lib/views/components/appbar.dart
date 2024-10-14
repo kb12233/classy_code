@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:classy_code/models/history_model.dart';
 import 'package:classy_code/views/components/classycode_custom_text.dart';
+import 'package:classy_code/views/components/classycode_historycard.dart';
 import 'package:classy_code/views/components/logo_with_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -75,32 +76,44 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 isBold: false,
                                 color: Colors.white),
                             items: historyItems
-                                .map((HistoryModel value) => DropdownMenuItem<HistoryModel>(
+                                .map((HistoryModel value) =>
+                                    DropdownMenuItem<HistoryModel>(
                                       value: value,
-                                      child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        margin: EdgeInsets.only(top: 5, bottom: 5),
-                                        color: greybg,
-                                        child: customText(
-                                          text: '${value.dateTime}',
-                                          fontSize:
-                                              screenDiagonal(context) * 0.01,
-                                          isBold: false,
-                                          color: Colors.white),
+                                      child: HistoryCard(
+                                        language: value.language,
+                                        dateTime: value.dateTime,
+                                        onDelete: () {
+                                          debugPrint(
+                                              "Delete item ${value.dateTime}");
+                                        },
                                       ),
                                     ))
                                 .toList(),
                             onChanged: onChanged,
                             dropdownStyleData: DropdownStyleData(
-                                maxHeight: screenDiagonal(context) * 0.3,
+                                maxHeight: screenDiagonal(context) * 0.25,
                                 width: screenDiagonal(context) * 0.15,
                                 offset: Offset(0, -8),
+                                scrollbarTheme: ScrollbarThemeData(
+                                    thickness: MaterialStateProperty.all(4),
+                                    radius: Radius.circular(8),
+                                    thumbColor: MaterialStateProperty.all(
+                                        Colors.white30),
+                                    trackColor: MaterialStateProperty.all(
+                                        Colors.grey[850])),
                                 decoration: BoxDecoration(
                                   color: Colors.grey[850],
                                   borderRadius: BorderRadius.circular(8.0),
                                 )),
                             buttonStyleData: ButtonStyleData(
+                              height: 46,
                               padding: EdgeInsets.only(left: 15, right: 15),
+                            ),
+                            menuItemStyleData: MenuItemStyleData(
+                              height: screenDiagonal(context) * 0.05,
+                              overlayColor: MaterialStateProperty.all(
+                                Colors.grey[850],
+                              ),
                             ),
                           ),
                         ),

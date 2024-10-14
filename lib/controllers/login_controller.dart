@@ -10,6 +10,8 @@ class LoginControl {
         return 'Please enter a valid email address.';
       } else if (password.isEmpty) {
         return 'Please enter a password.';
+      } else if (await UserModel.checkUserExists(email) == false) {
+        return 'No user found for that email. Please try again.';
       } else if (await UserModel.checkUserExists(email)) {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
@@ -17,7 +19,7 @@ class LoginControl {
         );
         return 'Success';
       } else {
-        return 'No user found for that email.';
+        return 'An error occured. Please try again.';
       }
     } on FirebaseAuthException catch (e) {
       return e.message;

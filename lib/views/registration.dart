@@ -49,7 +49,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
     String? result = await RegistrationController.registerUser(
         name: name, email: email, password: password);
     if (result == 'Success') {
-      Navigator.pushNamed(context, '/login');
+      //Navigator.pushNamed(context, '/login');
+      showDialog(
+          context: context,
+          builder: (context) {
+            Future.delayed(Duration(seconds: 5), () {
+              Navigator.pushNamed(context, '/login');
+            });
+
+            return customAlertDialog(
+                context: context,
+                title: 'Registration Successful!',
+                message: result.toString(),
+                icon: Icons.check_circle,
+                bgColor: bgColor,
+                iconColor: otherColor,
+                textColor: otherColor);
+          });
     } else if (result != 'Success') {
       showDialog(
           context: context,
@@ -159,6 +175,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           width: screenDiagonal(context) * 0.3,
                           icon: Icons.lock_outline,
                           controller: passwordController,
+                          obscureText: true,
                           labelText: 'Password'),
                       SizedBox(height: screenHeight(context) * 0.03),
                       customElevatedButton(

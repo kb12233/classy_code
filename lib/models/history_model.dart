@@ -14,6 +14,7 @@ class HistoryModel {
   final int totalClasses;
   final int totalRelationships;
   final List<String> typesOfRelationships;
+  final String language;
 
   HistoryModel(
       {this.historyID = '',
@@ -23,7 +24,8 @@ class HistoryModel {
       this.photoURL = '',
       required this.totalClasses,
       required this.totalRelationships,
-      required this.typesOfRelationships});
+      required this.typesOfRelationships,
+      this.language = ''});
 
   // TODO implement createHistoryItem
   static Future<String?> createHistoryItem(
@@ -43,7 +45,8 @@ class HistoryModel {
         'photoURL': '',
         'totalClasses': insightsData.totalClasses,
         'totalRelationships': insightsData.totalRelationships,
-        'typesOfRelationships': insightsData.typesOfRelationships
+        'typesOfRelationships': insightsData.typesOfRelationships,
+        'language': language,
       }).then((new_history) async {
         await _uploadImage(new_history.id, classDiagramImage!);
         String photoURL = await _getUploadedPhotoURL(new_history.id);
@@ -216,7 +219,7 @@ class HistoryModel {
   }
 
   static Future<List<HistoryModel>> mapHistoryList(
-    Stream<QuerySnapshot> historyItemList) async {
+      Stream<QuerySnapshot> historyItemList) async {
     List<HistoryModel> historyList = [];
 
     await for (QuerySnapshot snapshot in historyItemList) {
@@ -236,11 +239,12 @@ class HistoryModel {
             totalRelationships: historyItem['totalRelationships'],
             typesOfRelationships:
                 List<String>.from(historyItem['typesOfRelationships']),
+            language: historyItem['language'],
           );
           debugPrint('mapHistoryList: History item added -> ${h.dateTime}');
           historyList.add(h);
         }
-        
+
         debugPrint('mapHistoryList: Completed processing stream \n');
         return historyList;
       }
