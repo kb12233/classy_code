@@ -168,7 +168,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               onPressed: null,
                               style: ButtonStyle(
                                 side: MaterialStateProperty.all(BorderSide(
-                                    color: Colors.white,
+                                    color: Colors.white54,
                                     width: 1.0,
                                     style: BorderStyle.solid)),
                                 shape: MaterialStateProperty.all(
@@ -183,7 +183,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     top: 8, bottom: 8, left: 1, right: 1),
                                 child: Icon(
                                   Icons.restart_alt,
-                                  color: Colors.white,
+                                  color: Colors.white54,
                                   size: 30,
                                 ),
                               ),

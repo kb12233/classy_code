@@ -10,6 +10,7 @@ import 'package:classy_code/models/insight_data.dart';
 import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/state_manager/state_controller.dart';
 import 'package:classy_code/views/components/appbar.dart';
+import 'package:classy_code/views/components/info_bottom.dart';
 import 'package:classy_code/views/components/warning_banner.dart';
 import 'package:classy_code/views/components/generate_button.dart';
 import 'package:classy_code/views/components/generated_code_section.dart';
@@ -429,26 +430,37 @@ class _HomePageState extends State<HomePage> {
                       isUploading: notifier.isUploading,
                       pickFile: _pickFile,
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GenerateButton(onPressed: generate),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.001,
-                        ),
-                        SelectLanguage(
-                          selectedLanguage: notifier.selectedLanguage,
-                          languages: languages,
-                          onLanguageChanged: (value) {
-                            // setState(() {
-                            //   selectedLanguage = value!;
-                            // });
-                            notifier.setSelectedLanguage(value!);
-                          },
-                        ),
-                      ],
-                    ),
+                notifier.selectedHistoryItem == null
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: GenerateButton(onPressed: generate),
+                              ),
+                              SizedBox(
+                                width:
+                                    MediaQuery.of(context).size.width * 0.001,
+                              ),
+                              SelectLanguage(
+                                selectedLanguage: notifier.selectedLanguage,
+                                languages: languages,
+                                onLanguageChanged: (value) {
+                                  // setState(() {
+                                  //   selectedLanguage = value!;
+                                  // });
+                                  notifier.setSelectedLanguage(value!);
+                                },
+                              ),
+                            ],
+                          )
+                        : HistoryBottom(
+                            dateGenerated:
+                                notifier.selectedHistoryItem?.dateTime ??
+                                    DateTime.now(),
+                            timeGenerated:
+                                notifier.selectedHistoryItem?.dateTime ??
+                                    DateTime.now(),
+                            language: notifier.selectedHistoryItem?.language,
+                            bgColor: bgColor),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.001,
                     ),
