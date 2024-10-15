@@ -10,6 +10,7 @@ import 'package:classy_code/models/insight_data.dart';
 import 'package:classy_code/output_manager.dart';
 import 'package:classy_code/state_manager/state_controller.dart';
 import 'package:classy_code/views/components/appbar.dart';
+import 'package:classy_code/views/components/info_bottom.dart';
 import 'package:classy_code/views/components/warning_banner.dart';
 import 'package:classy_code/views/components/generate_button.dart';
 import 'package:classy_code/views/components/generated_code_section.dart';
@@ -314,10 +315,34 @@ class _HomePageState extends State<HomePage> {
     PaintingBinding.instance.imageCache.clear();
     PaintingBinding.instance.imageCache.clearLiveImages();
   }
-  
+
+  void resetComponents(StateController notifier) async {
+    // Clear image data
+    notifier.setSelectedFile(null);
+    debugPrint('Cleared selected image file.');
+
+    // Clear code content
+    notifier.setGeneratedCode('');
+    debugPrint('Cleared generated code content.');
+
+    // Reset other fields
+    notifier.setTotalClasses(0);
+    notifier.setTotalRelationships(0);
+    notifier.setTypesOfRelationships([]);
+
+    // Optionally, clear the selected history item itself
+    notifier.setSelectedHistoryItem(null);
+    debugPrint('Cleared selected history item data.');
+
+    // Clear any cached image if needed
+    clearImageCache();
+    debugPrint('Image cache cleared.');
+  }
+
   void displaySelectedHistoryItem(StateController notifier) async {
-    var response = await http.get(Uri.parse(notifier.selectedHistoryItem!.photoURL));
-    
+    var response =
+        await http.get(Uri.parse(notifier.selectedHistoryItem!.photoURL));
+
     if (response.statusCode == 200) {
       // store image in a file
       Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -325,29 +350,33 @@ class _HomePageState extends State<HomePage> {
       debugPrint('File Path: $filePath');
 
       clearImageCache();
-      
+
       File file = File(filePath);
       await file.writeAsBytes(response.bodyBytes);
-      
+
       notifier.setSelectedFile(file);
       debugPrint('Image saved to: $filePath');
     } else {
       debugPrint(
           'Failed to download image. Status code: ${response.statusCode}');
     }
-    
-    var codeResponse = await http.get(Uri.parse(notifier.selectedHistoryItem!.codeURL));
+
+    var codeResponse =
+        await http.get(Uri.parse(notifier.selectedHistoryItem!.codeURL));
     if (codeResponse.statusCode == 200) {
       // store content of code file in string
-      String codeContent = "```${notifier.selectedHistoryItem!.language}\n${codeResponse.body}\n```";
+      String codeContent =
+          "```${notifier.selectedHistoryItem!.language}\n${codeResponse.body}\n```";
       notifier.setGeneratedCode(codeContent);
 
       debugPrint('Downloaded Code Content: $codeContent');
     }
 
     notifier.setTotalClasses(notifier.selectedHistoryItem!.totalClasses);
-    notifier.setTotalRelationships(notifier.selectedHistoryItem!.totalRelationships);
-    notifier.setTypesOfRelationships(notifier.selectedHistoryItem!.typesOfRelationships);
+    notifier.setTotalRelationships(
+        notifier.selectedHistoryItem!.totalRelationships);
+    notifier.setTypesOfRelationships(
+        notifier.selectedHistoryItem!.typesOfRelationships);
   }
 
   @override
@@ -356,33 +385,36 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: CustomAppBar(
-        userEmail: userEmail,
-        // userEmail: notifier.userEmail,
-        // userEmail: notifier.userEmail,
-        // isHovering: _isHovering,
-        isHovering: notifier.isHovering,
-        // isHoveringLogout: _isHoveringLogout,
-        isHoveringLogout: notifier.isHoveringLogout,
-        setHoveringLogout: (bool hover) {
-          // setState(() {
-          //   _isHoveringLogout = hover;
-          // });
-          notifier.setIsHoveringLogout(hover);
-        },
-        // historyItems: historyList,
-        historyItems: notifier.historyList,
-        selectedValue: selectedValue,
-        onChanged: (HistoryModel? value) {
-          // setState(() {
-          //   selectedHistoryItem = value;
-          //   debugPrint('Selected value: ${selectedHistoryItem?.dateTime}');
-          // });
-          notifier.setSelectedHistoryItem(value);
-          debugPrint('Selected history item: ${notifier.selectedHistoryItem?.dateTime}');
+          userEmail: userEmail,
+          // userEmail: notifier.userEmail,
+          // userEmail: notifier.userEmail,
+          // isHovering: _isHovering,
+          isHovering: notifier.isHovering,
+          // isHoveringLogout: _isHoveringLogout,
+          isHoveringLogout: notifier.isHoveringLogout,
+          setHoveringLogout: (bool hover) {
+            // setState(() {
+            //   _isHoveringLogout = hover;
+            // });
+            notifier.setIsHoveringLogout(hover);
+          },
+          // historyItems: historyList,
+          historyItems: notifier.historyList,
+          selectedValue: selectedValue,
+          onChanged: (HistoryModel? value) {
+            // setState(() {
+            //   selectedHistoryItem = value;
+            //   debugPrint('Selected value: ${selectedHistoryItem?.dateTime}');
+            // });
+            notifier.setSelectedHistoryItem(value);
+            debugPrint(
+                'Selected history item: ${notifier.selectedHistoryItem?.dateTime}');
 
-          displaySelectedHistoryItem(notifier);
-        },
-      ),
+            displaySelectedHistoryItem(notifier);
+          },
+          resetComponents: () {
+            resetComponents(notifier);
+          }),
       body: Stack(
         children: [
           Row(
@@ -398,26 +430,37 @@ class _HomePageState extends State<HomePage> {
                       isUploading: notifier.isUploading,
                       pickFile: _pickFile,
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GenerateButton(onPressed: generate),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.001,
-                        ),
-                        SelectLanguage(
-                          selectedLanguage: notifier.selectedLanguage,
-                          languages: languages,
-                          onLanguageChanged: (value) {
-                            // setState(() {
-                            //   selectedLanguage = value!;
-                            // });
-                            notifier.setSelectedLanguage(value!);
-                          },
-                        ),
-                      ],
-                    ),
+                notifier.selectedHistoryItem == null
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: GenerateButton(onPressed: generate),
+                              ),
+                              SizedBox(
+                                width:
+                                    MediaQuery.of(context).size.width * 0.001,
+                              ),
+                              SelectLanguage(
+                                selectedLanguage: notifier.selectedLanguage,
+                                languages: languages,
+                                onLanguageChanged: (value) {
+                                  // setState(() {
+                                  //   selectedLanguage = value!;
+                                  // });
+                                  notifier.setSelectedLanguage(value!);
+                                },
+                              ),
+                            ],
+                          )
+                        : HistoryBottom(
+                            dateGenerated:
+                                notifier.selectedHistoryItem?.dateTime ??
+                                    DateTime.now(),
+                            timeGenerated:
+                                notifier.selectedHistoryItem?.dateTime ??
+                                    DateTime.now(),
+                            language: notifier.selectedHistoryItem?.language,
+                            bgColor: bgColor),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.001,
                     ),
