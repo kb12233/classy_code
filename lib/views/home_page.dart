@@ -314,10 +314,34 @@ class _HomePageState extends State<HomePage> {
     PaintingBinding.instance.imageCache.clear();
     PaintingBinding.instance.imageCache.clearLiveImages();
   }
-  
+
+  void clearSelectedHistoryItem(StateController notifier) async {
+    // Clear image data
+    notifier.setSelectedFile(null);
+    debugPrint('Cleared selected image file.');
+
+    // Clear code content
+    notifier.setGeneratedCode('');
+    debugPrint('Cleared generated code content.');
+
+    // Reset other fields
+    notifier.setTotalClasses(0);
+    notifier.setTotalRelationships(0);
+    notifier.setTypesOfRelationships([]);
+
+    // Optionally, clear the selected history item itself
+    notifier.setSelectedHistoryItem(null);
+    debugPrint('Cleared selected history item data.');
+
+    // Clear any cached image if needed
+    clearImageCache();
+    debugPrint('Image cache cleared.');
+  }
+
   void displaySelectedHistoryItem(StateController notifier) async {
-    var response = await http.get(Uri.parse(notifier.selectedHistoryItem!.photoURL));
-    
+    var response =
+        await http.get(Uri.parse(notifier.selectedHistoryItem!.photoURL));
+
     if (response.statusCode == 200) {
       // store image in a file
       Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -325,29 +349,33 @@ class _HomePageState extends State<HomePage> {
       debugPrint('File Path: $filePath');
 
       clearImageCache();
-      
+
       File file = File(filePath);
       await file.writeAsBytes(response.bodyBytes);
-      
+
       notifier.setSelectedFile(file);
       debugPrint('Image saved to: $filePath');
     } else {
       debugPrint(
           'Failed to download image. Status code: ${response.statusCode}');
     }
-    
-    var codeResponse = await http.get(Uri.parse(notifier.selectedHistoryItem!.codeURL));
+
+    var codeResponse =
+        await http.get(Uri.parse(notifier.selectedHistoryItem!.codeURL));
     if (codeResponse.statusCode == 200) {
       // store content of code file in string
-      String codeContent = "```${notifier.selectedHistoryItem!.language}\n${codeResponse.body}\n```";
+      String codeContent =
+          "```${notifier.selectedHistoryItem!.language}\n${codeResponse.body}\n```";
       notifier.setGeneratedCode(codeContent);
 
       debugPrint('Downloaded Code Content: $codeContent');
     }
 
     notifier.setTotalClasses(notifier.selectedHistoryItem!.totalClasses);
-    notifier.setTotalRelationships(notifier.selectedHistoryItem!.totalRelationships);
-    notifier.setTypesOfRelationships(notifier.selectedHistoryItem!.typesOfRelationships);
+    notifier.setTotalRelationships(
+        notifier.selectedHistoryItem!.totalRelationships);
+    notifier.setTypesOfRelationships(
+        notifier.selectedHistoryItem!.typesOfRelationships);
   }
 
   @override
@@ -356,33 +384,36 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: CustomAppBar(
-        userEmail: userEmail,
-        // userEmail: notifier.userEmail,
-        // userEmail: notifier.userEmail,
-        // isHovering: _isHovering,
-        isHovering: notifier.isHovering,
-        // isHoveringLogout: _isHoveringLogout,
-        isHoveringLogout: notifier.isHoveringLogout,
-        setHoveringLogout: (bool hover) {
-          // setState(() {
-          //   _isHoveringLogout = hover;
-          // });
-          notifier.setIsHoveringLogout(hover);
-        },
-        // historyItems: historyList,
-        historyItems: notifier.historyList,
-        selectedValue: selectedValue,
-        onChanged: (HistoryModel? value) {
-          // setState(() {
-          //   selectedHistoryItem = value;
-          //   debugPrint('Selected value: ${selectedHistoryItem?.dateTime}');
-          // });
-          notifier.setSelectedHistoryItem(value);
-          debugPrint('Selected history item: ${notifier.selectedHistoryItem?.dateTime}');
+          userEmail: userEmail,
+          // userEmail: notifier.userEmail,
+          // userEmail: notifier.userEmail,
+          // isHovering: _isHovering,
+          isHovering: notifier.isHovering,
+          // isHoveringLogout: _isHoveringLogout,
+          isHoveringLogout: notifier.isHoveringLogout,
+          setHoveringLogout: (bool hover) {
+            // setState(() {
+            //   _isHoveringLogout = hover;
+            // });
+            notifier.setIsHoveringLogout(hover);
+          },
+          // historyItems: historyList,
+          historyItems: notifier.historyList,
+          selectedValue: selectedValue,
+          onChanged: (HistoryModel? value) {
+            // setState(() {
+            //   selectedHistoryItem = value;
+            //   debugPrint('Selected value: ${selectedHistoryItem?.dateTime}');
+            // });
+            notifier.setSelectedHistoryItem(value);
+            debugPrint(
+                'Selected history item: ${notifier.selectedHistoryItem?.dateTime}');
 
-          displaySelectedHistoryItem(notifier);
-        },
-      ),
+            displaySelectedHistoryItem(notifier);
+          },
+          clearSelectedHistoryItem: () {
+            clearSelectedHistoryItem(notifier);
+          }),
       body: Stack(
         children: [
           Row(

@@ -14,6 +14,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userEmail;
   final bool isHovering;
@@ -22,6 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<HistoryModel> historyItems;
   final String? selectedValue;
   final Function(HistoryModel?) onChanged;
+  final Function() clearSelectedHistoryItem;
   final greybg = Color(0xFF202124);
 
   CustomAppBar({
@@ -32,6 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.historyItems,
     required this.selectedValue,
     required this.onChanged,
+    required this.clearSelectedHistoryItem,
   });
 
   double screenHeight(BuildContext context) {
@@ -141,9 +145,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         width: screenDiagonal(context) * 0.08,
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          print('hello');
-                        },
+                        onPressed: clearSelectedHistoryItem,
+                        // onPressed: () {
+                        //   print('hello');
+                              
+                             
+                        //   clearSelectedHistoryItem(Provider.of<StateController>(context, listen: false));
+                        // },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(greybg),
                           shape: MaterialStateProperty.all(
