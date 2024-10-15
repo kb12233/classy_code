@@ -14,8 +14,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userEmail;
   final bool isHovering;
@@ -24,7 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<HistoryModel> historyItems;
   final String? selectedValue;
   final Function(HistoryModel?) onChanged;
-  final Function() clearSelectedHistoryItem;
+  final Function() resetComponents;
   final greybg = Color(0xFF202124);
 
   CustomAppBar({
@@ -35,7 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.historyItems,
     required this.selectedValue,
     required this.onChanged,
-    required this.clearSelectedHistoryItem,
+    required this.resetComponents,
   });
 
   double screenHeight(BuildContext context) {
@@ -93,7 +91,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                         dateTime: value.dateTime,
                                         onDelete: () async {
                                           notifier.deleteHistoryItem(value);
-
                                           debugPrint(
                                               "Delete item ${value.dateTime}");
                                         },
@@ -144,33 +141,53 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       SizedBox(
                         width: screenDiagonal(context) * 0.08,
                       ),
-                      ElevatedButton(
-                        onPressed: clearSelectedHistoryItem,
-                        // onPressed: () {
-                        //   print('hello');
-                              
-                             
-                        //   clearSelectedHistoryItem(Provider.of<StateController>(context, listen: false));
-                        // },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(greybg),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          elevation: MaterialStateProperty.all(0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8, bottom: 8, left: 1, right: 1),
-                          child: Icon(
-                            Icons.restart_alt,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ),
-                      )
+                      notifier.selectedFile != null
+                          ? ElevatedButton(
+                              onPressed: resetComponents,
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(greybg),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                                elevation: MaterialStateProperty.all(0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 8, bottom: 8, left: 1, right: 1),
+                                child: Icon(
+                                  Icons.restart_alt,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                              ),
+                            )
+                          : OutlinedButton(
+                              onPressed: null,
+                              style: ButtonStyle(
+                                side: MaterialStateProperty.all(BorderSide(
+                                    color: Colors.white,
+                                    width: 1.0,
+                                    style: BorderStyle.solid)),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                                elevation: MaterialStateProperty.all(0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 8, bottom: 8, left: 1, right: 1),
+                                child: Icon(
+                                  Icons.restart_alt,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                              ),
+                            )
                     ],
                   ),
                 ),

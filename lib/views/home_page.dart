@@ -315,7 +315,7 @@ class _HomePageState extends State<HomePage> {
     PaintingBinding.instance.imageCache.clearLiveImages();
   }
 
-  void clearSelectedHistoryItem(StateController notifier) async {
+  void resetComponents(StateController notifier) async {
     // Clear image data
     notifier.setSelectedFile(null);
     debugPrint('Cleared selected image file.');
@@ -411,8 +411,8 @@ class _HomePageState extends State<HomePage> {
 
             displaySelectedHistoryItem(notifier);
           },
-          clearSelectedHistoryItem: () {
-            clearSelectedHistoryItem(notifier);
+          resetComponents: () {
+            resetComponents(notifier);
           }),
       body: Stack(
         children: [
