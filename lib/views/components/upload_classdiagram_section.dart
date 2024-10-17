@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:classy_code/state_manager/state_controller.dart';
 import 'package:classy_code/views/components/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UploadClassDiagramSection extends StatelessWidget {
   final File? selectedFile;
@@ -32,6 +34,7 @@ class UploadClassDiagramSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notifier = Provider.of<StateController>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -81,31 +84,35 @@ class UploadClassDiagramSection extends StatelessWidget {
                       ),
                     ),
                   ),
-                Positioned(
-                  bottom: selectedFile != null ? 20.0 : null,
-                  right: selectedFile != null ? 20.0 : null,
-                  child: Material(
-                    color: Color(0xFF31363F),
-                    borderRadius: BorderRadius.circular(50),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(50),
-                      onTap: () => pickFile(),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Icon(
-                          Icons.add,
-                          size: screenDiagonal(context) * 0.025,
-                          color: otherColor,
+                notifier.selectedHistoryItem == null
+                    ? Positioned(
+                        bottom: selectedFile != null ? 20.0 : null,
+                        right: selectedFile != null ? 20.0 : null,
+                        child: Material(
+                          color: Color(0xFF31363F),
+                          borderRadius: BorderRadius.circular(50),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(50),
+                            onTap: () => pickFile(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Icon(
+                                Icons.add,
+                                size: screenDiagonal(context) * 0.025,
+                                color: otherColor,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
+                      )
+                    : SizedBox.shrink(),
                 if (selectedFile == null && !isUploading)
                   Positioned(
                     top: MediaQuery.of(context).size.height * 0.42,
                     child: customText(
-                        text: 'Upload a Class Diagram',
+                        text: notifier.selectedHistoryItem != null
+                            ? ''
+                            : 'Upload a Class Diagram',
                         fontSize: screenDiagonal(context) * 0.01,
                         isBold: false,
                         color: otherColor),

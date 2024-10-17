@@ -254,6 +254,25 @@ class HistoryModel {
     return historyList;
   }
 
+  static List<HistoryModel> mapHistorySnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      var data = doc.data() as Map<String, dynamic>;
+
+      return HistoryModel(
+      historyID: doc.id,
+      userID: data['userID'], 
+      dateTime: (data['dateTime'] as Timestamp).toDate(),
+      codeURL: data['codeURL'],
+      photoURL: data['photoURL'],
+      totalClasses: data['totalClasses'], 
+      totalRelationships: data['totalRelationships'], 
+      typesOfRelationships: List<String>.from(data['typesOfRelationships']),
+      language: data['language'],
+      );
+
+    }).toList();
+  }
+
   static void triggerHistoryListUpdate(String userID) async {
     debugPrint('triggerHistoryListUpdate: just entered ${DateTime.now()}');
     var history = getHistoryList(userID);

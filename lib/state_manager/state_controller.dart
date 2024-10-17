@@ -5,8 +5,15 @@ import 'package:classy_code/models/history_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+class StateController extends ChangeNotifier {
+  bool _isSelectingHistory = false;
+  bool get isSelectingHistory => _isSelectingHistory;
 
-class StateController extends ChangeNotifier {  
+  void setIsSelectingHistory(bool value) {
+    _isSelectingHistory = value;
+    notifyListeners();
+  }
+
   // selectedLanguage state
   String _selectedLanguage = 'Select Language';
   String get selectedLanguage => _selectedLanguage;
@@ -16,7 +23,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // selectedFile state
   File? _selectedFile;
   File? get selectedFile => _selectedFile;
@@ -26,7 +32,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // selectedHistoryItem state
   HistoryModel? _selectedHistoryItem;
   HistoryModel? get selectedHistoryItem => _selectedHistoryItem;
@@ -36,7 +41,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // generatedCode state
   String _generatedCode = "";
   String get generatedCode => _generatedCode;
@@ -46,7 +50,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // totalClasses state
   int _totalClasses = 0;
   int get totalClasses => _totalClasses;
@@ -56,7 +59,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // totalRelationships state
   int _totalRelationships = 0;
   int get totalRelationships => _totalRelationships;
@@ -66,7 +68,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // typesOfRelationships state
   List<String> _typesOfRelationships = [];
   List<String> get typesOfRelationships => _typesOfRelationships;
@@ -76,7 +77,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // isUploading state
   bool _isUploading = false;
   bool get isUploading => _isUploading;
@@ -86,7 +86,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // isGenerating state
   bool _isGenerating = false;
   bool get isGenerating => _isGenerating;
@@ -96,7 +95,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // isHovering state
   bool _isHovering = false;
   bool get isHovering => _isHovering;
@@ -106,7 +104,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // isHoveringLogout state
   bool _isHoveringLogout = false;
   bool get isHoveringLogout => _isHoveringLogout;
@@ -116,7 +113,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // historyListStream state
   Stream<QuerySnapshot>? _historyListStream;
   Stream<QuerySnapshot>? get historyListStream => _historyListStream;
@@ -126,7 +122,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   // historyList state
   List<HistoryModel> _historyList = [];
   List<HistoryModel> get historyList => _historyList;
@@ -138,8 +133,11 @@ class StateController extends ChangeNotifier {
 
   void deleteHistoryItem(HistoryModel historyModel) async {
     await HistoryController.deleteHistoryItem(historyModel.historyID);
-    _historyList = _historyList.where((element) => element.historyID != historyModel.historyID).toList();
-    _historyListStream = HistoryController.getHistoryListStream(historyModel.userID);
+    _historyList = _historyList
+        .where((element) => element.historyID != historyModel.historyID)
+        .toList();
+    _historyListStream =
+        HistoryController.getHistoryListStream(historyModel.userID);
     notifyListeners();
   }
 

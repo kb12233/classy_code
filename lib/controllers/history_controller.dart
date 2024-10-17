@@ -18,6 +18,10 @@ class HistoryController {
     return HistoryModel.mapHistoryList(historyStream);
   }
 
+  static List<HistoryModel> mapHistoryList(QuerySnapshot historySnapshot) {
+    return HistoryModel.mapHistorySnapshot(historySnapshot);
+  }
+
   static Stream<QuerySnapshot> getHistoryListStream(String userID) {
     return HistoryModel.getHistoryList(userID);
   }

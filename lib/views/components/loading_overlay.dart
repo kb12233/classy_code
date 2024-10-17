@@ -1,12 +1,15 @@
+import 'package:classy_code/views/components/custom_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoadingOverlay extends StatelessWidget {
   final bool isUploading;
   final bool isGenerating;
+  final bool isSelectingHistoryItem;
 
   LoadingOverlay(
-      {required this.isUploading, required this.isGenerating});
+      {required this.isUploading,
+      required this.isGenerating,
+      required this.isSelectingHistoryItem});
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +24,24 @@ class LoadingOverlay extends StatelessWidget {
                   Color.fromARGB(255, 39, 211, 188)),
             ),
             SizedBox(height: 20),
-            Text(
-              isUploading
-                  ? 'Uploading...'
-                  : isGenerating
-                      ? 'Generating code...'
-                      : '',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-              ),
-            ),
+            if (isUploading)
+              customText(
+                  text: 'Uploading...',
+                  fontSize: 20,
+                  isBold: false,
+                  color: Colors.white),
+            if (isGenerating)
+              customText(
+                  text: 'Generating Code...',
+                  fontSize: 20,
+                  isBold: false,
+                  color: Colors.white),
+            if (isSelectingHistoryItem)
+              customText(
+                  text: 'Loading History...',
+                  fontSize: 20,
+                  isBold: false,
+                  color: Colors.white),
           ],
         ),
       ),
