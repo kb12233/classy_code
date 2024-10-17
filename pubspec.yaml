@@ -84,6 +84,20 @@ flutter:
     - lib/images/java_logo.png
     - lib/images/javascript_logo.png
     - lib/images/python_logo.png
+    - lib/images/light_inheritance.png
+    - lib/images/light_composition.png
+    - lib/images/light_aggregation.png
+    - lib/images/light_dependency.png
+    - lib/images/light_association.png
+    - lib/images/light_realization.png
+    - lib/images/dark_inheritance.png
+    - lib/images/dark_composition.png
+    - lib/images/dark_aggregation.png
+    - lib/images/dark_dependency.png
+    - lib/images/dark_association.png
+    - lib/images/dark_realization.png
+    - lib/images/class_diagram_icon.png
+    - lib/images/relationship_icon.png
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

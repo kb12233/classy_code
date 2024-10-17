@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
   List<String> typesOfRelationships = [];
   bool _isUploading = false;
   bool _isGenerating = false;
+  bool isSelectingHistory = false;
   String userEmail = '';
   bool _isHovering = false;
   bool _isHoveringLogout = false;
@@ -340,6 +341,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void displaySelectedHistoryItem(StateController notifier) async {
+    Provider.of<StateController>(context, listen: false)
+        .setIsSelectingHistory(true);
+
     var response =
         await http.get(Uri.parse(notifier.selectedHistoryItem!.photoURL));
 
@@ -377,6 +381,9 @@ class _HomePageState extends State<HomePage> {
         notifier.selectedHistoryItem!.totalRelationships);
     notifier.setTypesOfRelationships(
         notifier.selectedHistoryItem!.typesOfRelationships);
+
+    Provider.of<StateController>(context, listen: false)
+        .setIsSelectingHistory(false);
   }
 
   @override
@@ -430,7 +437,7 @@ class _HomePageState extends State<HomePage> {
                       isUploading: notifier.isUploading,
                       pickFile: _pickFile,
                     ),
-                notifier.selectedHistoryItem == null
+                    notifier.selectedHistoryItem == null
                         ? Row(
                             children: [
                               Expanded(
@@ -485,15 +492,22 @@ class _HomePageState extends State<HomePage> {
                   // generatedCode: generatedCode,
                   generatedCode: notifier.generatedCode,
                   outPutManager: outPutManager,
+                  numberOfRelationships: notifier.totalRelationships.toString(),
+                  numberOfClasses: notifier.totalClasses.toString(),
+                  typeOfRelationships: notifier.typesOfRelationships,
                 ),
               ),
             ],
           ),
           // if (_isUploading || _isGenerating)
-          if (notifier.isUploading || notifier.isGenerating)
+          if (notifier.isUploading ||
+              notifier.isGenerating ||
+              notifier.isSelectingHistory)
             LoadingOverlay(
-                isUploading: notifier.isUploading,
-                isGenerating: notifier.isGenerating),
+              isUploading: notifier.isUploading,
+              isGenerating: notifier.isGenerating,
+              isSelectingHistoryItem: notifier.isSelectingHistory,
+            ),
         ],
       ),
     );
