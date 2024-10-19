@@ -15,6 +15,7 @@ class HistoryModel {
   final int totalRelationships;
   final List<String> typesOfRelationships;
   final String language;
+  final String fileName;
 
   HistoryModel(
       {this.historyID = '',
@@ -25,7 +26,8 @@ class HistoryModel {
       required this.totalClasses,
       required this.totalRelationships,
       required this.typesOfRelationships,
-      this.language = ''});
+      this.language = '',
+      this.fileName = ''});
 
   // TODO implement createHistoryItem
   static Future<String?> createHistoryItem(
@@ -33,7 +35,8 @@ class HistoryModel {
       File? code,
       File? classDiagramImage,
       InsightsData insightsData,
-      String language) async {
+      String language,
+      String fileName) async {
     try {
       CollectionReference history_table =
           FirebaseFirestore.instance.collection('history');
@@ -47,9 +50,10 @@ class HistoryModel {
         'totalRelationships': insightsData.totalRelationships,
         'typesOfRelationships': insightsData.typesOfRelationships,
         'language': language,
+        'fileName': fileName,
       }).then((new_history) async {
-        await _uploadImage(new_history.id, classDiagramImage!);
-        String photoURL = await _getUploadedPhotoURL(new_history.id);
+        await _uploadImage(new_history.id, classDiagramImage!, fileName);
+        String photoURL = await _getUploadedPhotoURL(new_history.id, fileName);
         await new_history.update({'photoURL': photoURL});
 
         await _uploadCodeFile(new_history.id, code!, language);
@@ -63,10 +67,10 @@ class HistoryModel {
     }
   }
 
-  static Future<void> _uploadImage(String historyID, File image) async {
+  static Future<void> _uploadImage(String historyID, File image, String fileName) async {
     try {
       String imagePath =
-          'history_images/$historyID/class_diagram_$historyID.jpg';
+          'history_images/$historyID/$fileName';
       firebase_storage.Reference storageReference =
           firebase_storage.FirebaseStorage.instance.ref().child(imagePath);
       await storageReference.putFile(image);
@@ -75,12 +79,12 @@ class HistoryModel {
     }
   }
 
-  static Future<String> _getUploadedPhotoURL(String historyID) async {
+  static Future<String> _getUploadedPhotoURL(String historyID, String fileName) async {
     String photoURL = '';
 
     try {
       String imagePath =
-          'history_images/$historyID/class_diagram_$historyID.jpg';
+          'history_images/$historyID/$fileName';
       firebase_storage.Reference storageReference =
           firebase_storage.FirebaseStorage.instance.ref().child(imagePath);
 
@@ -240,6 +244,7 @@ class HistoryModel {
             typesOfRelationships:
                 List<String>.from(historyItem['typesOfRelationships']),
             language: historyItem['language'],
+            fileName: historyItem['fileName'],
           );
           debugPrint('mapHistoryList: History item added -> ${h.dateTime}');
           historyList.add(h);
@@ -259,17 +264,16 @@ class HistoryModel {
       var data = doc.data() as Map<String, dynamic>;
 
       return HistoryModel(
-      historyID: doc.id,
-      userID: data['userID'], 
-      dateTime: (data['dateTime'] as Timestamp).toDate(),
-      codeURL: data['codeURL'],
-      photoURL: data['photoURL'],
-      totalClasses: data['totalClasses'], 
-      totalRelationships: data['totalRelationships'], 
-      typesOfRelationships: List<String>.from(data['typesOfRelationships']),
-      language: data['language'],
+        historyID: doc.id,
+        userID: data['userID'],
+        dateTime: (data['dateTime'] as Timestamp).toDate(),
+        codeURL: data['codeURL'],
+        photoURL: data['photoURL'],
+        totalClasses: data['totalClasses'],
+        totalRelationships: data['totalRelationships'],
+        typesOfRelationships: List<String>.from(data['typesOfRelationships']),
+        language: data['language'],
       );
-
     }).toList();
   }
 
@@ -298,13 +302,57 @@ class HistoryModel {
     return isHistoryListNotEmpty;
   }
 
+  static void deleteHistoryImage(String historyID, String fileName) {
+    try {
+      String imagePath =
+          'history_images/$historyID/$fileName';
+      firebase_storage.FirebaseStorage.instance.ref().child(imagePath).delete();
+    } catch (e) {
+      debugPrint('Error deleting history image: $e');
+    }
+  }
+
+  static void deleteHistoryCode(String historyID, String language) {
+    try {
+      String extension = '';
+
+      switch (language) {
+        case 'python':
+          extension = 'py';
+          break;
+        case 'dart':
+          extension = 'dart';
+          break;
+        case 'javascript':
+          extension = 'js';
+          break;
+        case 'java':
+          extension = 'java';
+          break;
+        // case 'csharp':
+        //   return 'cs';
+        // Add more languages and their extensions as needed
+        default:
+          extension = 'txt';
+          break;
+      }
+
+      String codePath = 'history_code/$historyID/code_$historyID.$extension';
+      firebase_storage.FirebaseStorage.instance.ref().child(codePath).delete();
+    } catch (e) {
+      debugPrint('Error deleting history image: $e');
+    }
+  }
+
   // TODO implement deleteHistoryItem
-  static Future<void> deleteHistoryItem(String historyID) async {
+  static Future<void> deleteHistoryItem(HistoryModel history) async {
     try {
       CollectionReference historyTable =
           FirebaseFirestore.instance.collection('history');
 
-      await historyTable.doc(historyID).delete();
+      await historyTable.doc(history.historyID).delete();
+      deleteHistoryImage(history.historyID, history.fileName);
+      deleteHistoryCode(history.historyID, history.language);
     } on FirebaseException catch (e) {
       debugPrint('Error deleting history item: $e');
     }

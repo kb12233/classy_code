@@ -132,7 +132,7 @@ class StateController extends ChangeNotifier {
   }
 
   void deleteHistoryItem(HistoryModel historyModel) async {
-    await HistoryController.deleteHistoryItem(historyModel.historyID);
+    await HistoryController.deleteHistoryItem(historyModel);
     _historyList = _historyList
         .where((element) => element.historyID != historyModel.historyID)
         .toList();

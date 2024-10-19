@@ -19,11 +19,14 @@ import 'package:classy_code/views/components/select_laguage.dart';
 import 'package:classy_code/views/components/upload_classdiagram_section.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/painting.dart';
+import 'package:path/path.dart' as p;
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -262,6 +265,8 @@ class _HomePageState extends State<HomePage> {
 
       InsightsData insightsData =
           await converter.extractInsights(notifier.selectedFile!);
+      
+      String fileName = p.basename(notifier.selectedFile!.path);
 
       try {
         String? result = await HistoryController.createHistoryItem(
@@ -269,7 +274,8 @@ class _HomePageState extends State<HomePage> {
             codeFile,
             notifier.selectedFile,
             insightsData,
-            language);
+            language,
+            fileName);
       } on Exception catch (e) {
         print('Error creating history item: $e');
       }
