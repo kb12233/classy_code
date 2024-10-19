@@ -4,9 +4,11 @@ import 'dart:math';
 
 import 'package:classy_code/views/components/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class HistoryCard extends StatelessWidget {
+  final String fileName;
   final String language;
   final DateTime dateTime;
   final VoidCallback onDelete;
@@ -18,6 +20,8 @@ class HistoryCard extends StatelessWidget {
   };
 
   HistoryCard({
+    super.key, 
+    required this.fileName,
     required this.language,
     required this.dateTime,
     required this.onDelete,
@@ -63,18 +67,29 @@ class HistoryCard extends StatelessWidget {
                     children: [
                       Container(
                         margin: EdgeInsets.only(left: 15),
+                        child: Text(
+                        fileName.length <= 12 ? fileName : "${fileName.substring(0, 9)}...",
+                          style: GoogleFonts.jetBrainsMono(
+                            fontSize: screenDiagonal(context) * 0.007,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 15),
                         child: customText(
                           text: date,
-                          fontSize: screenDiagonal(context) * 0.009,
+                          fontSize: screenDiagonal(context) * 0.006,
                           isBold: false,
-                          color: Colors.white,
+                          color: Colors.white54,
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(left: 15),
                         child: customText(
                           text: time,
-                          fontSize: screenDiagonal(context) * 0.008,
+                          fontSize: screenDiagonal(context) * 0.006,
                           isBold: false,
                           color: Colors.white54,
                         ),

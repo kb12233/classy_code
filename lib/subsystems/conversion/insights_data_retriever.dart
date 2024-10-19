@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:classy_code/models/history_model.dart';
 import 'package:classy_code/models/insight_data.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
@@ -55,6 +56,10 @@ class InsightsDataRetriever {
     ]);
 
     print(response.text);
+
+    if (response.text!.length > 1) {
+      return int.parse(response.text![0]);
+    }
 
     return int.parse(response.text ?? '0');
   }

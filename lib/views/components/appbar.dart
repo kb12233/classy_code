@@ -87,6 +87,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     DropdownMenuItem<HistoryModel>(
                                       value: value,
                                       child: HistoryCard(
+                                        fileName: value.fileName,
                                         language: value.language,
                                         dateTime: value.dateTime,
                                         onDelete: () async {

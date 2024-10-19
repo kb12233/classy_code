@@ -10,8 +10,8 @@ class HistoryController {
     HistoryModel.triggerHistoryListUpdate(userID);
   }
 
-  static Future<String?> createHistoryItem(String userID, File? code, File? classDiagramImage, InsightsData insightsData, String language) async {
-    return await HistoryModel.createHistoryItem(userID, code, classDiagramImage, insightsData, language);
+  static Future<String?> createHistoryItem(String userID, File? code, File? classDiagramImage, InsightsData insightsData, String language, String fileName) async {
+    return await HistoryModel.createHistoryItem(userID, code, classDiagramImage, insightsData, language, fileName);
   }
 
   static Future<List<HistoryModel>> mapHistoryListStream(Stream<QuerySnapshot> historyStream) async {
@@ -26,8 +26,8 @@ class HistoryController {
     return HistoryModel.getHistoryList(userID);
   }
 
-  static Future<void> deleteHistoryItem(String historyID) async {
-    return await HistoryModel.deleteHistoryItem(historyID);
+  static Future<void> deleteHistoryItem(HistoryModel history) async {
+    return await HistoryModel.deleteHistoryItem(history);
   }
 
   static Future<DocumentSnapshot?> getHistoryItem(String historyID) {
