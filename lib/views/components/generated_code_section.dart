@@ -155,7 +155,7 @@ class _GeneratedCodeSectionState extends State<GeneratedCodeSection> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: customText(
-                                    text: 'No. of Classes detected',
+                                    text: 'No. of Classifiers detected',
                                     fontSize: 14,
                                     color: Colors.white,
                                     isBold: false,
