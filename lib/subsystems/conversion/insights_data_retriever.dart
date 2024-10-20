@@ -20,7 +20,7 @@ class InsightsDataRetriever {
 
     final image = await (File(classdiagramImage!.path).readAsBytes());
     final prompt = TextPart('''
-        How many classes are there in the given class diagram image? Only provide the number.
+        How many classifiers (e.g. classes, interfaces, and enumerations) are there in the given class diagram image? Only provide the number.
         ''');
     final imagePart = [DataPart('image/jpeg', image)];
 
@@ -29,6 +29,12 @@ class InsightsDataRetriever {
     ]);
 
     print(response.text);
+
+    // remove period at the end of the response if it exists
+    if (response.text!.endsWith('.')) {
+      String responseCopy = response.text!.substring(0, response.text!.length - 1);
+      return int.parse(responseCopy);
+    }
 
     return int.parse(response.text ?? '0');
   }
@@ -57,8 +63,10 @@ class InsightsDataRetriever {
 
     print(response.text);
 
-    if (response.text!.length > 1) {
-      return int.parse(response.text![0]);
+    // remove period at the end of the response if it exists
+    if (response.text!.endsWith('.')) {
+      String responseCopy = response.text!.substring(0, response.text!.length - 1);
+      return int.parse(responseCopy);
     }
 
     return int.parse(response.text ?? '0');
