@@ -40,7 +40,7 @@ class HistoryCard extends StatelessWidget {
     final String time = DateFormat('h:mm a').format(dateTime);
 
     return Container(
-      height: screenDiagonal(context) * 0.5,
+      height: 100,
       padding: EdgeInsets.only(top: 5, bottom: 5),
       margin: EdgeInsets.symmetric(vertical: 3),
       decoration: BoxDecoration(

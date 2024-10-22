@@ -273,6 +273,7 @@ class HistoryModel {
         totalRelationships: data['totalRelationships'],
         typesOfRelationships: List<String>.from(data['typesOfRelationships']),
         language: data['language'],
+        fileName: data['fileName'],
       );
     }).toList();
   }
