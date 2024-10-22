@@ -63,10 +63,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getUserEmail();
-    getHistoryList();
-
-    // This is for testing functionality of getHistoryList() and mapHistoryList()
-    // HistoryController.triggerHistoryListUpdate(FirebaseAuth.instance.currentUser!.uid);
+    // getHistoryList();
   }
 
   @override
@@ -101,36 +98,12 @@ class _HomePageState extends State<HomePage> {
         HistoryController.getHistoryListStream(
             FirebaseAuth.instance.currentUser!.uid);
 
-    historyItemList.listen((QuerySnapshot snapshot) {
-      if (snapshot.docs.isEmpty) {
-        debugPrint('No history items found \n');
-      } else {
-        debugPrint('History items found \n');
-        int count = 0;
-        for (var historyItem in snapshot.docs) {
-          debugPrint('History snapshot $count');
-          count++;
-          debugPrint('${historyItem['dateTime'].toDate().toString()} \n');
-        }
-      }
-
-      // Update state after processing stream
-      // setState(() {
-      //   historyListStream = historyItemList;
-      //   // historyList = hList;
-      // });
-      Provider.of<StateController>(context, listen: false)
+    Provider.of<StateController>(context, listen: false)
           .setHistoryListStream(historyItemList);
-    }, onError: (error) {
-      debugPrint('Error fetching history: $error');
-    });
 
     List<HistoryModel> hList =
         await HistoryController.mapHistoryListStream(historyItemList);
 
-    // setState(() {
-    //   historyList = hList;
-    // });
     Provider.of<StateController>(context, listen: false).setHistoryList(hList);
   }
 
@@ -138,16 +111,10 @@ class _HomePageState extends State<HomePage> {
     File? file = await inputManager.uploadInput();
 
     if (file != null) {
-      // setState(() {
-      //   _isUploading = true;
-      // });
       Provider.of<StateController>(context, listen: false).setIsUploading(true);
 
       bool isValid = await inputManager.verifyInput(file);
 
-      // setState(() {
-      //   _isUploading = false;
-      // });
       Provider.of<StateController>(context, listen: false)
           .setIsUploading(false);
 
@@ -171,9 +138,6 @@ class _HomePageState extends State<HomePage> {
           },
         );
       } else {
-        // setState(() {
-        //   _selectedFile = file;
-        // });
         Provider.of<StateController>(context, listen: false)
             .setSelectedFile(file);
       }
@@ -182,11 +146,8 @@ class _HomePageState extends State<HomePage> {
 
   void generate() async {
     final notifier = Provider.of<StateController>(context, listen: false);
+    
     if (notifier.selectedLanguage != "Select Language") {
-      // setState(() {
-      //   _isGenerating = true;
-      // });
-
       notifier.setIsGenerating(true);
       String? code;
       try {
@@ -284,13 +245,6 @@ class _HomePageState extends State<HomePage> {
         await codeFile.delete();
       }
 
-      // setState(() {
-      //   generatedCode = code ?? '';
-      //   totalClasses = insightsData.totalClasses;
-      //   totalRelationships = insightsData.totalRelationships;
-      //   typesOfRelationships = insightsData.typesOfRelationships;
-      //   _isGenerating = false;
-      // });
       notifier.setGeneratedCode(code ?? '');
       notifier.setTotalClasses(insightsData.totalClasses);
       notifier.setTotalRelationships(insightsData.totalRelationships);
@@ -347,8 +301,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void displaySelectedHistoryItem(StateController notifier) async {
-    Provider.of<StateController>(context, listen: false)
-        .setIsSelectingHistory(true);
+    notifier.setIsSelectingHistory(true);
 
     var response =
         await http.get(Uri.parse(notifier.selectedHistoryItem!.photoURL));
@@ -399,26 +352,13 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.black,
       appBar: CustomAppBar(
           userEmail: userEmail,
-          // userEmail: notifier.userEmail,
-          // userEmail: notifier.userEmail,
-          // isHovering: _isHovering,
           isHovering: notifier.isHovering,
-          // isHoveringLogout: _isHoveringLogout,
           isHoveringLogout: notifier.isHoveringLogout,
           setHoveringLogout: (bool hover) {
-            // setState(() {
-            //   _isHoveringLogout = hover;
-            // });
             notifier.setIsHoveringLogout(hover);
           },
-          // historyItems: historyList,
-          historyItems: notifier.historyList,
           selectedValue: selectedValue,
           onChanged: (HistoryModel? value) {
-            // setState(() {
-            //   selectedHistoryItem = value;
-            //   debugPrint('Selected value: ${selectedHistoryItem?.dateTime}');
-            // });
             notifier.setSelectedHistoryItem(value);
             debugPrint(
                 'Selected history item: ${notifier.selectedHistoryItem?.dateTime}');
@@ -437,9 +377,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     UploadClassDiagramSection(
-                      // selectedFile: _selectedFile,
                       selectedFile: notifier.selectedFile,
-                      // isUploading: _isUploading,
                       isUploading: notifier.isUploading,
                       pickFile: _pickFile,
                     ),
@@ -457,9 +395,6 @@ class _HomePageState extends State<HomePage> {
                                 selectedLanguage: notifier.selectedLanguage,
                                 languages: languages,
                                 onLanguageChanged: (value) {
-                                  // setState(() {
-                                  //   selectedLanguage = value!;
-                                  // });
                                   notifier.setSelectedLanguage(value!);
                                 },
                               ),
@@ -495,7 +430,6 @@ class _HomePageState extends State<HomePage> {
               ),
               Expanded(
                 child: GeneratedCodeSection(
-                  // generatedCode: generatedCode,
                   generatedCode: notifier.generatedCode,
                   outPutManager: outPutManager,
                   numberOfRelationships: notifier.totalRelationships.toString(),
@@ -505,7 +439,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          // if (_isUploading || _isGenerating)
           if (notifier.isUploading ||
               notifier.isGenerating ||
               notifier.isSelectingHistory)

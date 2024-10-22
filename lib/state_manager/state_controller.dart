@@ -131,16 +131,6 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteHistoryItem(HistoryModel historyModel) async {
-    await HistoryController.deleteHistoryItem(historyModel);
-    _historyList = _historyList
-        .where((element) => element.historyID != historyModel.historyID)
-        .toList();
-    _historyListStream =
-        HistoryController.getHistoryListStream(historyModel.userID);
-    notifyListeners();
-  }
-
   void resetStates() {
     _selectedLanguage = 'Select Language';
     _selectedFile = null;
