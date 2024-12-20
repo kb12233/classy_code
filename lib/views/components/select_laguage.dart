@@ -62,7 +62,8 @@ class _SelectLanguageState extends State<SelectLanguage> {
               ),
               value: notifier.selectedLanguage,
               isExpanded: true,
-              items: widget.languages
+              items: notifier.selectedFile != null 
+                ? widget.languages
                   .map((lang) => DropdownMenuItem(
                         value: lang,
                         child: customText(
@@ -71,7 +72,8 @@ class _SelectLanguageState extends State<SelectLanguage> {
                             isBold: false,
                             color: Colors.white),
                       ))
-                  .toList(),
+                  .toList()
+                : [],
               onChanged: (value) => widget.onLanguageChanged(value),
             ),
           ),

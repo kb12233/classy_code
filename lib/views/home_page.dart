@@ -278,6 +278,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void resetComponents(StateController notifier) async {
+    // Clear selected language
+    notifier.setSelectedLanguage('Select Language');
+    debugPrint('Cleared selected language.');
+    
     // Clear image data
     notifier.setSelectedFile(null);
     debugPrint('Cleared selected image file.');
@@ -385,19 +389,31 @@ class _HomePageState extends State<HomePage> {
                         ? Row(
                             children: [
                               Expanded(
-                                child: GenerateButton(onPressed: generate),
+                                child: GenerateButton(
+                                  onPressed: generate,
+                                  isEnabled: notifier.selectedFile != null,
+                                ),
                               ),
                               SizedBox(
                                 width:
                                     MediaQuery.of(context).size.width * 0.001,
                               ),
+                              // notifier.selectedFile != null
+                              //   ? SelectLanguage(
+                              //       selectedLanguage: notifier.selectedLanguage,
+                              //       languages: languages,
+                              //       onLanguageChanged: (value) {
+                              //         notifier.setSelectedLanguage(value!);
+                              //       },
+                              //     )
+                              //   : SizedBox(),
                               SelectLanguage(
-                                selectedLanguage: notifier.selectedLanguage,
-                                languages: languages,
-                                onLanguageChanged: (value) {
-                                  notifier.setSelectedLanguage(value!);
-                                },
-                              ),
+                                    selectedLanguage: notifier.selectedLanguage,
+                                    languages: languages,
+                                    onLanguageChanged: (value) {
+                                      notifier.setSelectedLanguage(value!);
+                                    },
+                                  )
                             ],
                           )
                         : HistoryBottom(
