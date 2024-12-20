@@ -32,7 +32,8 @@ class InsightsDataRetriever {
 
     // remove period at the end of the response if it exists
     if (response.text!.endsWith('.')) {
-      String responseCopy = response.text!.substring(0, response.text!.length - 1);
+      String responseCopy =
+          response.text!.substring(0, response.text!.length - 1);
       return int.parse(responseCopy);
     }
 
@@ -65,7 +66,8 @@ class InsightsDataRetriever {
 
     // remove period at the end of the response if it exists
     if (response.text!.endsWith('.')) {
-      String responseCopy = response.text!.substring(0, response.text!.length - 1);
+      String responseCopy =
+          response.text!.substring(0, response.text!.length - 1);
       return int.parse(responseCopy);
     }
 
@@ -74,7 +76,6 @@ class InsightsDataRetriever {
 
   static Future<List<String>> getTypesOfRelationships(
       File? classdiagramImage) async {
-
     String? apiKey = dotenv.env['API_KEY'];
     if (apiKey == null) {
       print('No \$API_KEY environment variable');
@@ -108,16 +109,30 @@ class InsightsDataRetriever {
     final response = await model.generateContent([
       Content.multi([prompt, ...imagePart])
     ]);
-    print(response.text);
+    print(response.text); // v -> "['association', 'inheritance']"
 
-    String cleanedResponse = response.text!.replaceAll(RegExp(r'[\[\]]'), '').trim();
+    String cleanedResponse =
+        response.text!.replaceAll(RegExp(r'[\[\]]'), '').trim();
+    print("Cleaned response: " + cleanedResponse);
 
-    List<String> relationshipTypes = cleanedResponse
-      .split(',')
-      .map((type) => type.trim())
-      .toList();
-  
+    List<String> relationshipTypes =
+        cleanedResponse.split(',').map((type) => type.trim()).toList();
+
+    // remove quotes from each relationship type in the list
+    for (int i = 0; i < relationshipTypes.length; i++) {
+      if ((relationshipTypes[i].startsWith('"') ||
+              relationshipTypes[i].startsWith('\'')) &&
+          (relationshipTypes[i].endsWith('"') ||
+              relationshipTypes[i].endsWith('\''))) {
+        relationshipTypes[i] =
+            relationshipTypes[i].substring(1, relationshipTypes[i].length - 1);
+      }
+    }
+
+    List<String> dumList = ['haha', 'hoho', 'hihi'];
+
     print(relationshipTypes);
+    print(dumList);
 
     return relationshipTypes;
   }
@@ -127,12 +142,11 @@ class InsightsDataRetriever {
     int totalRelationships = await getTotalRelationships(classdiagramImage);
     List<String> typesOfRelationships =
         await getTypesOfRelationships(classdiagramImage);
-    
+
     InsightsData insightsData = InsightsData(
-      totalClasses: totalClasses,
-      totalRelationships: totalRelationships,
-      typesOfRelationships: typesOfRelationships
-    );
+        totalClasses: totalClasses,
+        totalRelationships: totalRelationships,
+        typesOfRelationships: typesOfRelationships);
 
     return insightsData;
   }
